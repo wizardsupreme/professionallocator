@@ -57,36 +57,47 @@ export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapView
 
       // Add new markers
       const bounds = new google.maps.LatLngBounds();
-      
+        
       businesses.forEach(business => {
-        const marker = new google.maps.Marker({
-          position: business.location,
+        const pin = document.createElement('div');
+        pin.innerHTML = `
+          <div style="cursor: pointer;">
+            <svg width="32" height="48" viewBox="0 0 32 48" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 0C7.164 0 0 7.164 0 16c0 12 16 32 16 32s16-20 16-32c0-8.836-7.164-16-16-16z" fill="#FF4444"/>
+              <circle cx="16" cy="16" r="8" fill="white"/>
+            </svg>
+          </div>
+        `;
+
+        const marker = new google.maps.marker.AdvancedMarkerElement({
           map: mapInstanceRef.current,
+          position: business.location,
           title: business.name,
-          animation: google.maps.Animation.DROP,
-          icon: {
-            url: `data:image/svg+xml,${encodeURIComponent(`
-              <svg width="32" height="48" viewBox="0 0 32 48" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16 0C7.164 0 0 7.164 0 16c0 12 16 32 16 32s16-20 16-32c0-8.836-7.164-16-16-16z" fill="#FF4444"/>
-                <circle cx="16" cy="16" r="8" fill="white"/>
-              </svg>
-            `)}`,
-            anchor: new google.maps.Point(16, 48),
-            scaledSize: new google.maps.Size(32, 48)
-          }
+          content: pin
         });
 
         // Add click listener
         marker.addListener('click', () => {
-          // Bounce animation for clicked marker
-          marker.setAnimation(google.maps.Animation.BOUNCE);
-          setTimeout(() => marker.setAnimation(null), 750);
+          // Create bounce animation using CSS
+          pin.style.animation = 'bounce 0.5s';
+          pin.style.transformOrigin = 'center bottom';
+          setTimeout(() => pin.style.animation = '', 500);
           onMarkerClick(business);
         });
-        
+          
         markersRef.current.push(marker);
         bounds.extend(business.location);
       });
+
+      // Add CSS animation for bounce effect
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-20px); }
+        }
+      `;
+      document.head.appendChild(style);
 
       mapInstanceRef.current.fitBounds(bounds);
     };
