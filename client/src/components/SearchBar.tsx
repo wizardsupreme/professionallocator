@@ -65,13 +65,15 @@ export function SearchBar({ onSearch }: SearchBarProps) {
     initAutocomplete();
   }, []);
 
+  const { getProfessionSuggestions, getLocationSuggestions } = useSearchHistory();
+  const { user } = useUser();
+
   useEffect(() => {
     if (locationSelected) return;
     
     const fetchPredictions = async () => {
       setLoading(true);
       try {
-        // Only fetch Google Places predictions if there's input text
         if (location && autocompleteService.current) {
           const response = await autocompleteService.current?.getPlacePredictions({
             input: location,
@@ -81,8 +83,14 @@ export function SearchBar({ onSearch }: SearchBarProps) {
         } else {
           setPredictions([]);
         }
-        // Always show predictions/history when not selected
-        setShowPredictions(true);
+        
+        // Only show predictions/history if we're still focused (activeInputField === 'location')
+        // and either:
+        // 1. We have some history to show (user is logged in), or
+        // 2. We have a location query to show predictions for
+        if (activeInputField === 'location' && (user || location)) {
+          setShowPredictions(true);
+        }
       } catch (error) {
         console.error('Error fetching predictions:', error);
       } finally {
@@ -92,10 +100,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
 
     const timeoutId = setTimeout(fetchPredictions, 300);
     return () => clearTimeout(timeoutId);
-  }, [location, locationSelected]);
-
-  const { getProfessionSuggestions, getLocationSuggestions } = useSearchHistory();
-  const { user } = useUser();
+  }, [location, locationSelected, user, activeInputField]);
 
   useEffect(() => {
     if (professionSelected) {
@@ -321,8 +326,11 @@ export function SearchBar({ onSearch }: SearchBarProps) {
               }}
               onFocus={() => {
                 setActiveInputField('location');
+                // Show predictions/history immediately on focus if not already selected
                 if (!locationSelected) {
                   setShowPredictions(true);
+                  // Force a re-render with empty predictions to show history
+                  setPredictions([]);
                 }
               }}
               onKeyDown={handleKeyDown}
