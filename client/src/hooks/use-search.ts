@@ -14,16 +14,31 @@ export interface Business {
   };
 }
 
+interface SearchResponse {
+  results: Business[];
+  total: number;
+  page: number;
+  totalPages: number;
+}
+
 interface SearchParams {
   query: string;
   location: string;
+  page?: number;
+  limit?: number;
 }
 
-export function useSearch({ query, location }: SearchParams) {
-  return useQuery<Business[]>({
-    queryKey: ['/api/search', query, location],
+export function useSearch({ query, location, page = 1, limit = 10 }: SearchParams) {
+  return useQuery<SearchResponse>({
+    queryKey: ['/api/search', query, location, page, limit],
     queryFn: async () => {
-      const params = new URLSearchParams({ query, location });
+      const params = new URLSearchParams({ 
+        query, 
+        location,
+        page: page.toString(),
+        limit: limit.toString()
+      });
+      
       const response = await fetch(`/api/search?${params}`, {
         credentials: 'include'
       });

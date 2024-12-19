@@ -13,17 +13,15 @@ export default function HomePage() {
   const [view, setView] = useState<'list' | 'map'>('list');
   const [selectedBusiness, setSelectedBusiness] = useState<Business>();
   const [currentPage, setCurrentPage] = useState(1);
-  const { data: businesses, isLoading } = useSearch(searchParams);
+  const { data: searchData, isLoading } = useSearch({ 
+    ...searchParams, 
+    page: currentPage, 
+    limit: 10 
+  });
   const { user, logout } = useUser();
-
-  const ITEMS_PER_PAGE = 15;
-  const totalPages = Math.ceil((businesses?.length || 0) / ITEMS_PER_PAGE);
-
-  const paginatedBusinesses = useMemo(() => {
-    if (!businesses) return [];
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return businesses.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [businesses, currentPage]);
+  
+  const businesses = searchData?.results || [];
+  const totalPages = searchData?.totalPages || 1;
 
   const handleSearch = (query: string, location: string) => {
     setSearchParams({ query, location });
@@ -105,7 +103,7 @@ export default function HomePage() {
             ) : view === 'list' ? (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 gap-2">
-                  {paginatedBusinesses.map((business) => (
+                  {businesses.map((business) => (
                     <BusinessCard
                       key={business.id}
                       business={business}
