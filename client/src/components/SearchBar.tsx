@@ -118,9 +118,14 @@ export function SearchBar({ onSearch }: SearchBarProps) {
             setQuery(profession.name);
             setShowProfessions(false);
           }
+          // Always move to location input when Enter is pressed in profession field
           setActiveInputField('location');
           const locationInput = document.querySelector('input[placeholder="Location"]') as HTMLInputElement;
-          if (locationInput) locationInput.focus();
+          if (locationInput) {
+            locationInput.focus();
+            // Scroll the location input into view if needed
+            locationInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
         } else {
           if (selectedIndex >= 0) {
             const prediction = predictions[selectedIndex];
@@ -182,6 +187,14 @@ export function SearchBar({ onSearch }: SearchBarProps) {
     setShowProfessions(false);
     setSelectedIndex(-1);
     setActiveInputField('location');
+    // Focus on location input after selecting profession
+    setTimeout(() => {
+      const locationInput = document.querySelector('input[placeholder="Location"]') as HTMLInputElement;
+      if (locationInput) {
+        locationInput.focus();
+        locationInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 0);
   };
 
   return (
