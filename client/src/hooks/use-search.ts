@@ -1,5 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 
+export interface Review {
+  author_name: string;
+  rating: number;
+  text: string;
+  time: number;
+}
+
 export interface Business {
   id: string;
   name: string;
@@ -12,6 +19,7 @@ export interface Business {
     lat: number;
     lng: number;
   };
+  reviewsList?: Review[];
 }
 
 interface SearchResponse {
