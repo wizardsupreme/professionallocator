@@ -33,10 +33,16 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
 
   if (!business) return null;
 
-  const totalPages = business.reviewsList 
+  // Calculate total pages based on total reviews count
+  const totalPages = business.reviewsList?.length
     ? Math.ceil(business.reviewsList.length / reviewsPerPage)
     : 1;
 
+  console.log('Total reviews:', business.reviewsList?.length);
+  console.log('Total pages:', totalPages);
+  console.log('Current page:', currentPage);
+
+  // Get current page's reviews
   const currentReviews = business.reviewsList
     ? business.reviewsList.slice(
         (currentPage - 1) * reviewsPerPage,
@@ -150,8 +156,14 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
                       <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}
-                        onPageChange={setCurrentPage}
+                        onPageChange={(page) => {
+                          console.log('Changing to page:', page);
+                          setCurrentPage(page);
+                        }}
                       />
+                    </div>
+                    <div className="text-sm text-center text-muted-foreground mt-2">
+                      Showing reviews {((currentPage - 1) * reviewsPerPage) + 1} - {Math.min(currentPage * reviewsPerPage, business.reviewsList?.length || 0)} of {business.reviewsList?.length}
                     </div>
                   </>
                 )}
