@@ -112,19 +112,23 @@ export function SearchBar({ onSearch }: SearchBarProps) {
         break;
       case 'Enter':
         e.preventDefault();
-        if (selectedIndex >= 0) {
-          if (activeInputField === 'profession') {
+        if (activeInputField === 'profession') {
+          if (selectedIndex >= 0) {
             const profession = professionSuggestions[selectedIndex];
             setQuery(profession.name);
             setShowProfessions(false);
-            setActiveInputField('location');
-          } else {
+          }
+          setActiveInputField('location');
+          const locationInput = document.querySelector('input[placeholder="Location"]') as HTMLInputElement;
+          if (locationInput) locationInput.focus();
+        } else {
+          if (selectedIndex >= 0) {
             const prediction = predictions[selectedIndex];
             handlePredictionClick(prediction);
+          }
+          if (query && location) {
             handleSubmit(e as any);
           }
-        } else if (query && location) {
-          handleSubmit(e as any);
         }
         setSelectedIndex(-1);
         break;

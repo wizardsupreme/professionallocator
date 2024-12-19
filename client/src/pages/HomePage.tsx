@@ -51,60 +51,66 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <SearchBar onSearch={handleSearch} />
-        </div>
-
-        <div className="mb-4">
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-              <button
-                onClick={() => setView('list')}
-                className={`${
-                  view === 'list'
-                    ? 'border-primary text-primary'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                } whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm`}
-              >
-                List View
-              </button>
-              <button
-                onClick={() => setView('map')}
-                className={`${
-                  view === 'map'
-                    ? 'border-primary text-primary'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                } whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm`}
-              >
-                Map View
-              </button>
-            </nav>
+      <main className="flex-1 flex flex-col">
+        <div className="flex-1 flex items-center justify-center px-4">
+          <div className="w-full max-w-3xl">
+            <SearchBar onSearch={handleSearch} />
           </div>
         </div>
 
-        {isLoading ? (
-          <div className="text-center">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto" />
-          </div>
-        ) : view === 'list' ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {businesses?.map((business) => (
-              <BusinessCard
-                key={business.id}
-                business={business}
-                onClick={() => setSelectedBusiness(business)}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="h-[calc(100vh-250px)]">
-            {businesses && (
-              <MapView
-                businesses={businesses}
-                selectedBusiness={selectedBusiness}
-                onMarkerClick={setSelectedBusiness}
-              />
+        {businesses && businesses.length > 0 && (
+          <div className="container mx-auto px-4 py-8">
+            <div className="mb-4">
+              <div className="border-b border-gray-200">
+                <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+                  <button
+                    onClick={() => setView('list')}
+                    className={`${
+                      view === 'list'
+                        ? 'border-primary text-primary'
+                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                    } whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm`}
+                  >
+                    List View
+                  </button>
+                  <button
+                    onClick={() => setView('map')}
+                    className={`${
+                      view === 'map'
+                        ? 'border-primary text-primary'
+                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                    } whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm`}
+                  >
+                    Map View
+                  </button>
+                </nav>
+              </div>
+            </div>
+
+            {isLoading ? (
+              <div className="text-center">
+                <Loader2 className="h-8 w-8 animate-spin mx-auto" />
+              </div>
+            ) : view === 'list' ? (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {businesses?.map((business) => (
+                  <BusinessCard
+                    key={business.id}
+                    business={business}
+                    onClick={() => setSelectedBusiness(business)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="h-[calc(100vh-250px)]">
+                {businesses && (
+                  <MapView
+                    businesses={businesses}
+                    selectedBusiness={selectedBusiness}
+                    onMarkerClick={setSelectedBusiness}
+                  />
+                )}
+              </div>
             )}
           </div>
         )}
