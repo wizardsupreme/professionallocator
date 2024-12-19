@@ -22,19 +22,77 @@ interface Profession {
 }
 
 const PROFESSIONS: Profession[] = [
+  // Healthcare & Wellness
   { name: "Massage Therapist", category: "Healthcare & Wellness" },
   { name: "Physical Therapist", category: "Healthcare & Wellness" },
   { name: "Chiropractor", category: "Healthcare & Wellness" },
+  { name: "Acupuncturist", category: "Healthcare & Wellness" },
+  { name: "Nutritionist", category: "Healthcare & Wellness" },
+  { name: "Yoga Instructor", category: "Healthcare & Wellness" },
+  { name: "Personal Trainer", category: "Healthcare & Wellness" },
+  
+  // Healthcare
+  { name: "Doctor", category: "Healthcare" },
+  { name: "Dentist", category: "Healthcare" },
+  { name: "Optometrist", category: "Healthcare" },
+  { name: "Pediatrician", category: "Healthcare" },
+  { name: "Dermatologist", category: "Healthcare" },
+  { name: "Psychologist", category: "Healthcare" },
+  
+  // Construction & Maintenance
   { name: "Electrician", category: "Construction & Maintenance" },
   { name: "Plumber", category: "Construction & Maintenance" },
   { name: "Carpenter", category: "Construction & Maintenance" },
+  { name: "HVAC Technician", category: "Construction & Maintenance" },
+  { name: "Painter", category: "Construction & Maintenance" },
+  { name: "Roofer", category: "Construction & Maintenance" },
+  { name: "General Contractor", category: "Construction & Maintenance" },
+  
+  // Professional Services
   { name: "Lawyer", category: "Legal Services" },
   { name: "Accountant", category: "Financial Services" },
-  { name: "Doctor", category: "Healthcare" },
-  { name: "Dentist", category: "Healthcare" },
-  { name: "Mechanic", category: "Automotive" },
+  { name: "Financial Advisor", category: "Financial Services" },
+  { name: "Real Estate Agent", category: "Real Estate" },
+  { name: "Insurance Agent", category: "Insurance" },
+  { name: "Tax Consultant", category: "Financial Services" },
+  
+  // Automotive
+  { name: "Auto Mechanic", category: "Automotive" },
+  { name: "Auto Body Shop", category: "Automotive" },
+  { name: "Car Dealer", category: "Automotive" },
+  { name: "Auto Detailer", category: "Automotive" },
+  
+  // Technology
   { name: "Web Developer", category: "Technology" },
-  { name: "Graphic Designer", category: "Creative Services" }
+  { name: "IT Consultant", category: "Technology" },
+  { name: "Computer Repair", category: "Technology" },
+  { name: "Software Developer", category: "Technology" },
+  
+  // Creative Services
+  { name: "Graphic Designer", category: "Creative Services" },
+  { name: "Photographer", category: "Creative Services" },
+  { name: "Interior Designer", category: "Creative Services" },
+  { name: "Wedding Planner", category: "Creative Services" },
+  
+  // Beauty & Personal Care
+  { name: "Hair Stylist", category: "Beauty & Personal Care" },
+  { name: "Nail Salon", category: "Beauty & Personal Care" },
+  { name: "Barber", category: "Beauty & Personal Care" },
+  { name: "Spa", category: "Beauty & Personal Care" },
+  { name: "Esthetician", category: "Beauty & Personal Care" },
+  
+  // Education & Training
+  { name: "Tutor", category: "Education & Training" },
+  { name: "Music Teacher", category: "Education & Training" },
+  { name: "Language Teacher", category: "Education & Training" },
+  { name: "Driving Instructor", category: "Education & Training" },
+  
+  // Home Services
+  { name: "House Cleaner", category: "Home Services" },
+  { name: "Landscaper", category: "Home Services" },
+  { name: "Pest Control", category: "Home Services" },
+  { name: "Moving Company", category: "Home Services" },
+  { name: "Handyman", category: "Home Services" }
 ];
 
 export function SearchBar({ onSearch }: SearchBarProps) {
