@@ -47,6 +47,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
     "@types/google.maps": "^3.58.1",
+    "@types/jest": "^29.5.14",
     "@vitest/coverage-v8": "^2.1.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

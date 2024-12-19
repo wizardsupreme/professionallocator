@@ -20,8 +20,8 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
   const reviewsPerPage = 5;
 
   useEffect(() => {
-    if (business?.reviewsList) {
-      // Reset current page when business changes
+    if (business?.id) {
+      // Reset to first page when business changes
       setCurrentPage(1);
       // Add a small delay to ensure smooth animation
       const timer = setTimeout(() => {
@@ -29,26 +29,28 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [business?.id]); // Using business.id to detect changes
+  }, [business?.id]);
 
   if (!business) return null;
 
-  // Calculate total pages based on total reviews count
-  const totalPages = business.reviewsList?.length
-    ? Math.ceil(business.reviewsList.length / reviewsPerPage)
-    : 1;
-
-  console.log('Total reviews:', business.reviewsList?.length);
-  console.log('Total pages:', totalPages);
-  console.log('Current page:', currentPage);
+  const reviews = business.reviewsList || [];
+  const totalReviews = reviews.length;
+  const totalPages = Math.max(1, Math.ceil(totalReviews / reviewsPerPage));
+  
+  // Ensure current page is within bounds
+  const validCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
+  if (validCurrentPage !== currentPage) {
+    setCurrentPage(validCurrentPage);
+  }
 
   // Get current page's reviews
-  const currentReviews = business.reviewsList
-    ? business.reviewsList.slice(
-        (currentPage - 1) * reviewsPerPage,
-        currentPage * reviewsPerPage
-      )
-    : [];
+  const startIndex = (validCurrentPage - 1) * reviewsPerPage;
+  const endIndex = Math.min(startIndex + reviewsPerPage, totalReviews);
+  const currentReviews = reviews.slice(startIndex, endIndex);
+
+  // Calculate display information
+  const displayStart = startIndex + 1;
+  const displayEnd = Math.min(startIndex + reviewsPerPage, totalReviews);
 
   return (
     <Dialog open={!!business} onOpenChange={() => onClose()}>
