@@ -16,16 +16,7 @@ export function registerRoutes(app: Express): Server {
         return res.status(400).send("Query and location are required");
       }
 
-      // Mock data for testing
-      const mockLocations = {
-        "lisbon": { lat: 38.7223, lng: -9.1393 }, // Praça do Comércio
-        "porto": { lat: 41.1579, lng: -8.6291 }, // Avenida dos Aliados
-        "faro": { lat: 37.0193, lng: -7.9304 } // Faro Old Town
-      };
-
-      const baseLocation = mockLocations[location.toLowerCase()] || { lat: 38.7223, lng: -9.1393 }; // Default to Lisbon
-
-      // Mock data based on profession/query
+      // Mock data based on profession/query with real coordinates
       const professionBusinesses: Record<string, any[]> = {
         'electrician': [
           {
@@ -36,7 +27,7 @@ export function registerRoutes(app: Express): Server {
             rating: 4.7,
             reviews: 89,
             photos: [],
-            location: { lat: baseLocation.lat + 0.01, lng: baseLocation.lng + 0.01 }
+            location: { lat: 38.7107, lng: -9.1368 } // Exact coordinates for Rua da Prata 125
           },
           {
             id: "2",
@@ -46,7 +37,7 @@ export function registerRoutes(app: Express): Server {
             rating: 4.5,
             reviews: 67,
             photos: [],
-            location: { lat: baseLocation.lat - 0.01, lng: baseLocation.lng - 0.01 }
+            location: { lat: 38.7198, lng: -9.1347 } // Exact coordinates for Av. Almirante Reis 45
           },
           {
             id: "3",
@@ -56,7 +47,7 @@ export function registerRoutes(app: Express): Server {
             rating: 4.8,
             reviews: 124,
             photos: [],
-            location: { lat: baseLocation.lat + 0.02, lng: baseLocation.lng + 0.02 }
+            location: { lat: 38.7108, lng: -9.1387 } // Exact coordinates for Rua Augusta 78
           },
           {
             id: "4",
@@ -66,7 +57,7 @@ export function registerRoutes(app: Express): Server {
             rating: 4.3,
             reviews: 45,
             photos: [],
-            location: { lat: baseLocation.lat - 0.02, lng: baseLocation.lng - 0.02 }
+            location: { lat: 38.7374, lng: -9.1468 } // Exact coordinates for Av. da República 234
           },
           {
             id: "5",
@@ -76,7 +67,7 @@ export function registerRoutes(app: Express): Server {
             rating: 4.6,
             reviews: 93,
             photos: [],
-            location: { lat: baseLocation.lat + 0.03, lng: baseLocation.lng + 0.03 }
+            location: { lat: 38.7118, lng: -9.1400 } // Exact coordinates for Rua do Carmo 56
           },
           {
             id: "6",
@@ -86,13 +77,13 @@ export function registerRoutes(app: Express): Server {
             rating: 4.4,
             reviews: 78,
             photos: [],
-            location: { lat: baseLocation.lat - 0.03, lng: baseLocation.lng - 0.03 }
+            location: { lat: 38.7205, lng: -9.1422 } // Exact coordinates for Av. da Liberdade 189
           }
         ],
         // Add more profession-specific businesses here
       };
 
-      // Default results if no profession match
+      // Default results with exact coordinates
       const defaultResults = [
         {
           id: "1",
@@ -102,7 +93,7 @@ export function registerRoutes(app: Express): Server {
           rating: 4.5,
           reviews: 123,
           photos: [],
-          location: { lat: baseLocation.lat + 0.01, lng: baseLocation.lng + 0.01 }
+          location: { lat: 38.7189, lng: -9.1428 } // Exact coordinates for Av. da Liberdade 110
         },
         {
           id: "2",
@@ -112,7 +103,7 @@ export function registerRoutes(app: Express): Server {
           rating: 4.2,
           reviews: 89,
           photos: [],
-          location: { lat: baseLocation.lat - 0.01, lng: baseLocation.lng - 0.01 }
+          location: { lat: 38.7099, lng: -9.1397 } // Exact coordinates for Rua Augusta 25
         },
         {
           id: "3",
@@ -122,7 +113,7 @@ export function registerRoutes(app: Express): Server {
           rating: 4.8,
           reviews: 156,
           photos: [],
-          location: { lat: baseLocation.lat, lng: baseLocation.lng + 0.02 }
+          location: { lat: 38.7075, lng: -9.1364 } // Exact coordinates for Praça do Comércio
         },
         {
           id: "4",
@@ -132,7 +123,7 @@ export function registerRoutes(app: Express): Server {
           rating: 4.3,
           reviews: 78,
           photos: [],
-          location: { lat: baseLocation.lat - 0.02, lng: baseLocation.lng + 0.01 }
+          location: { lat: 38.7350, lng: -9.1459 } // Exact coordinates for Av. da República 45
         },
         {
           id: "5",
@@ -142,7 +133,7 @@ export function registerRoutes(app: Express): Server {
           rating: 4.6,
           reviews: 112,
           photos: [],
-          location: { lat: baseLocation.lat + 0.015, lng: baseLocation.lng - 0.02 }
+          location: { lat: 38.7103, lng: -9.1374 } // Exact coordinates for Rua do Ouro 12
         },
         {
           id: "6",
@@ -152,7 +143,7 @@ export function registerRoutes(app: Express): Server {
           rating: 4.4,
           reviews: 95,
           photos: [],
-          location: { lat: baseLocation.lat - 0.015, lng: baseLocation.lng - 0.01 }
+          location: { lat: 38.7331, lng: -9.1520 } // Exact coordinates for Av. António Augusto de Aguiar 90
         }
       ];
 
