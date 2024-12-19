@@ -65,15 +65,25 @@ export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapView
           title: business.name,
           animation: google.maps.Animation.DROP,
           icon: {
-            path: google.maps.SymbolPath.MARKER,
-            fillColor: "#DB4437",
-            fillOpacity: 1,
-            strokeWeight: 1,
-            scale: 10
+            url: `data:image/svg+xml,${encodeURIComponent(`
+              <svg width="24" height="36" viewBox="0 0 24 36" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 0C5.383 0 0 5.383 0 12c0 9 12 24 12 24s12-15 12-24c0-6.617-5.383-12-12-12z" fill="#DB4437"/>
+                <circle cx="12" cy="12" r="7" fill="white"/>
+              </svg>
+            `)}`,
+            anchor: new google.maps.Point(12, 36),
+            scaledSize: new google.maps.Size(24, 36)
           }
         });
 
-        marker.addListener('click', () => onMarkerClick(business));
+        // Add click listener
+        marker.addListener('click', () => {
+          // Bounce animation for clicked marker
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+          setTimeout(() => marker.setAnimation(null), 750);
+          onMarkerClick(business);
+        });
+        
         markersRef.current.push(marker);
         bounds.extend(business.location);
       });

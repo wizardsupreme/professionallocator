@@ -156,7 +156,17 @@ export function registerRoutes(app: Express): Server {
         }
       ];
 
-      const results = professionBusinesses[query.toLowerCase()] || defaultResults;
+      // Get results based on profession or default
+      let results = professionBusinesses[query.toLowerCase()] || defaultResults;
+
+      // Ensure we're showing all results (no limit)
+      results = results.map(result => ({
+        ...result,
+        location: {
+          lat: result.location.lat + (Math.random() - 0.5) * 0.01, // Add slight variation to prevent overlapping
+          lng: result.location.lng + (Math.random() - 0.5) * 0.01
+        }
+      }));
 
       // Save search history if user is logged in
       if (req.user?.id) {
