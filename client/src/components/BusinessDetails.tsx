@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Star, MapPin, Phone, Globe, Mail, Clock, X } from "lucide-react";
@@ -27,10 +27,10 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
   return (
     <Dialog open={!!business} onOpenChange={() => onClose()}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <h2 className="text-2xl font-bold">{business.name}</h2>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold">{business.name}</DialogTitle>
+          <DialogDescription>
+            <div className="flex items-center gap-2 text-sm mt-1">
               <div className="flex items-center">
                 <Star className="h-4 w-4 text-yellow-400 mr-1" />
                 <span>{business.rating}</span>
@@ -38,17 +38,8 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
               <span>·</span>
               <span>{business.reviews} reviews</span>
             </div>
-          </div>
-        </div>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={onClose}
-          className="absolute right-4 top-4"
-        >
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </Button>
+          </DialogDescription>
+        </DialogHeader>
 
         <Tabs defaultValue="about" className="w-full">
           <TabsList className="w-full">
