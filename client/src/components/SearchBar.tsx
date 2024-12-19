@@ -63,16 +63,22 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   }, []);
 
   useEffect(() => {
-    if (!location || !autocompleteService.current || locationSelected) return;
+    if (locationSelected) return;
     
     const fetchPredictions = async () => {
       setLoading(true);
       try {
-        const response = await autocompleteService.current?.getPlacePredictions({
-          input: location,
-          types: ['(cities)']
-        });
-        setPredictions(response?.predictions || []);
+        // Only fetch Google Places predictions if there's input text
+        if (location && autocompleteService.current) {
+          const response = await autocompleteService.current?.getPlacePredictions({
+            input: location,
+            types: ['(cities)']
+          });
+          setPredictions(response?.predictions || []);
+        } else {
+          setPredictions([]);
+        }
+        // Always show predictions/history when not selected
         setShowPredictions(true);
       } catch (error) {
         console.error('Error fetching predictions:', error);
@@ -89,35 +95,52 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   const { user } = useUser();
 
   useEffect(() => {
-    if (!query || professionSelected) {
+    if (professionSelected) {
       setProfessionSuggestions([]);
       setShowProfessions(false);
       return;
     }
 
-    // Combine static professions with history suggestions
-    const filtered = PROFESSIONS.filter(profession =>
-      profession.name.toLowerCase().includes(query.toLowerCase())
-    );
+    let suggestions: Array<{ name: string; category: string; isHistory?: boolean }> = [];
 
-    // Get history suggestions if user is logged in
-    const historySuggestions = user ? getProfessionSuggestions(query) : [];
+    // Get history suggestions first if user is logged in
+    if (user) {
+      const historySuggestions = getProfessionSuggestions(query || '');
+      suggestions.push(
+        ...historySuggestions.map(suggestion => ({
+          name: suggestion,
+          category: 'Recent Searches',
+          isHistory: true
+        }))
+      );
+    }
 
-    // Create a Set to remove duplicates
-    const uniqueSuggestions = new Set([
-      ...historySuggestions.map(suggestion => ({ 
-        name: suggestion, 
-        category: 'Recent Searches',
-        isHistory: true 
-      })),
-      ...filtered.map(profession => ({
+    // Add filtered professions if there's a query
+    if (query) {
+      const filtered = PROFESSIONS.filter(profession =>
+        profession.name.toLowerCase().includes(query.toLowerCase())
+      );
+      suggestions.push(
+        ...filtered.map(profession => ({
+          ...profession,
+          isHistory: false
+        }))
+      );
+    } else if (!suggestions.length) {
+      // If no query and no history, show all professions
+      suggestions = PROFESSIONS.map(profession => ({
         ...profession,
         isHistory: false
-      }))
-    ]);
+      }));
+    }
 
-    setProfessionSuggestions(Array.from(uniqueSuggestions));
-    setShowProfessions(uniqueSuggestions.size > 0);
+    // Remove duplicates
+    const uniqueSuggestions = Array.from(
+      new Map(suggestions.map(item => [item.name, item])).values()
+    );
+
+    setProfessionSuggestions(uniqueSuggestions);
+    setShowProfessions(uniqueSuggestions.length > 0);
   }, [query, professionSelected, user]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -245,8 +268,8 @@ export function SearchBar({ onSearch }: SearchBarProps) {
             }}
             onFocus={() => {
               setActiveInputField('profession');
-              // Only show professions if we haven't selected one and have a query
-              if (!professionSelected && query.length > 0) {
+              // Show professions suggestions if not selected (including recent searches)
+              if (!professionSelected) {
                 setShowProfessions(true);
               }
             }}
@@ -295,7 +318,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
               }}
               onFocus={() => {
                 setActiveInputField('location');
-                if (!locationSelected && location.length > 0) {
+                if (!locationSelected) {
                   setShowPredictions(true);
                 }
               }}
