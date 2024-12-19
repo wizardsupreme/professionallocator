@@ -15,12 +15,38 @@ interface BusinessDetailsProps {
 
 export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
   const [reviewsToShow, setReviewsToShow] = useState(5);
+  const [loading, setLoading] = useState(false);
+  const reviewsEndRef = useRef<HTMLDivElement>(null);
   
   if (!business) return null;
 
-  const showMoreReviews = () => {
-    setReviewsToShow(prev => prev + 5);
-  };
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (first.isIntersecting && business.reviewsList && reviewsToShow < business.reviewsList.length) {
+          setLoading(true);
+          // Simulate network delay for smooth loading experience
+          setTimeout(() => {
+            setReviewsToShow(prev => prev + 5);
+            setLoading(false);
+          }, 500);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentRef = reviewsEndRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [reviewsToShow, business.reviewsList]);
 
   const hasMoreReviews = business.reviewsList && reviewsToShow < business.reviewsList.length;
 
@@ -117,14 +143,13 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
                   </div>
                 ))}
               </div>
+              {loading && (
+                <div className="flex justify-center py-4">
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                </div>
+              )}
               {hasMoreReviews && (
-                <Button 
-                  variant="outline" 
-                  className="w-full mt-4" 
-                  onClick={showMoreReviews}
-                >
-                  Load More Reviews
-                </Button>
+                <div ref={reviewsEndRef} className="h-4" />
               )}
             </div>
           </TabsContent>
