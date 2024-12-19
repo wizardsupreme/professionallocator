@@ -19,8 +19,8 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b">
+    <div className="min-h-screen bg-background flex flex-col">
+      <header className="border-b sticky top-0 bg-background z-10">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-primary">BusinessFinder</h1>
           <div className="flex items-center gap-4">

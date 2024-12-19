@@ -38,8 +38,11 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   const [predictions, setPredictions] = useState<PlacePrediction[]>([]);
   const [professionSuggestions, setProfessionSuggestions] = useState<Profession[]>([]);
   const [loading, setLoading] = useState(false);
+  const [activeInputField, setActiveInputField] = useState<'profession' | 'location'>('profession');
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
   const [showPredictions, setShowPredictions] = useState(false);
+  const [showProfessions, setShowProfessions] = useState(false);
 
   useEffect(() => {
     const initAutocomplete = async () => {
@@ -78,9 +81,74 @@ export function SearchBar({ onSearch }: SearchBarProps) {
     return () => clearTimeout(timeoutId);
   }, [location]);
 
+  useEffect(() => {
+    if (!query) {
+      setProfessionSuggestions([]);
+      setShowProfessions(false);
+      return;
+    }
+
+    const filtered = PROFESSIONS.filter(profession =>
+      profession.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setProfessionSuggestions(filtered);
+    setShowProfessions(filtered.length > 0);
+  }, [query]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!showProfessions && !showPredictions) return;
+    
+    const suggestions = activeInputField === 'profession' ? professionSuggestions : predictions;
+    const maxIndex = suggestions.length - 1;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedIndex(prev => (prev < maxIndex ? prev + 1 : 0));
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedIndex(prev => (prev > 0 ? prev - 1 : maxIndex));
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (selectedIndex >= 0) {
+          if (activeInputField === 'profession') {
+            const profession = professionSuggestions[selectedIndex];
+            setQuery(profession.name);
+            setShowProfessions(false);
+            setActiveInputField('location');
+          } else {
+            const prediction = predictions[selectedIndex];
+            handlePredictionClick(prediction);
+            handleSubmit(e as any);
+          }
+        } else if (query && location) {
+          handleSubmit(e as any);
+        }
+        setSelectedIndex(-1);
+        break;
+      case 'Tab':
+        if (activeInputField === 'profession' && query) {
+          e.preventDefault();
+          setActiveInputField('location');
+        }
+        setShowProfessions(false);
+        setShowPredictions(false);
+        setSelectedIndex(-1);
+        break;
+      case 'Escape':
+        setShowProfessions(false);
+        setShowPredictions(false);
+        setSelectedIndex(-1);
+        break;
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setShowPredictions(false);
+    setShowProfessions(false);
     onSearch(query, location);
   };
 
@@ -88,6 +156,15 @@ export function SearchBar({ onSearch }: SearchBarProps) {
     setLocation(prediction.description);
     setPredictions([]);
     setShowPredictions(false);
+    setSelectedIndex(-1);
+  };
+
+  const handleProfessionClick = (profession: Profession) => {
+    setQuery(profession.name);
+    setProfessionSuggestions([]);
+    setShowProfessions(false);
+    setSelectedIndex(-1);
+    setActiveInputField('location');
   };
 
   return (
@@ -99,8 +176,31 @@ export function SearchBar({ onSearch }: SearchBarProps) {
             placeholder="Search for businesses or services..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onFocus={() => {
+              setActiveInputField('profession');
+              setShowProfessions(true);
+            }}
+            onKeyDown={handleKeyDown}
             className="pl-10"
           />
+          {showProfessions && professionSuggestions.length > 0 && (
+            <div className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg max-h-60 overflow-auto">
+              {professionSuggestions.map((profession, index) => (
+                <div
+                  key={profession.name}
+                  className={`px-4 py-2 cursor-pointer ${
+                    index === selectedIndex ? 'bg-primary text-primary-foreground' : 'hover:bg-gray-100'
+                  }`}
+                  onClick={() => handleProfessionClick(profession)}
+                >
+                  <div className="flex items-center gap-2">
+                    <span>{profession.name}</span>
+                    <span className="text-sm text-muted-foreground">({profession.category})</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <div className="flex-1 relative">
           <MapPin className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
@@ -111,6 +211,11 @@ export function SearchBar({ onSearch }: SearchBarProps) {
               setLocation(e.target.value);
               setShowPredictions(true);
             }}
+            onFocus={() => {
+              setActiveInputField('location');
+              setShowPredictions(true);
+            }}
+            onKeyDown={handleKeyDown}
             className="pl-10"
           />
           {showPredictions && predictions.length > 0 && (
