@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Business } from '../hooks/use-search';
+import { Loader } from '@googlemaps/js-api-loader';
 
 interface MapViewProps {
   businesses: Business[];
@@ -37,14 +38,16 @@ export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapView
       });
     };
 
-    if (!window.google) {
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
-      script.onload = initMap;
-      document.head.appendChild(script);
-    } else {
+    const loader = new Loader({
+      apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+      version: "weekly",
+    });
+
+    loader.load().then(() => {
       initMap();
-    }
+    }).catch((error) => {
+      console.error("Error loading Google Maps:", error);
+    });
   }, []);
 
   useEffect(() => {
