@@ -4,8 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useUser } from '../hooks/use-user';
 import { useToast } from '@/hooks/use-toast';
+import { ArrowLeft } from 'lucide-react';
+import { useLocation } from 'wouter';
 
 export default function AuthPage() {
+  const [, setLocation] = useLocation();
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -35,7 +38,16 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <Card className="w-full max-w-md">
+      <div className="w-full max-w-md space-y-4">
+        <Button
+          variant="ghost"
+          className="flex items-center gap-2"
+          onClick={() => setLocation('/')}
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Search
+        </Button>
+        <Card>
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">
             {isLogin ? 'Login' : 'Create an Account'}
@@ -78,6 +90,7 @@ export default function AuthPage() {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

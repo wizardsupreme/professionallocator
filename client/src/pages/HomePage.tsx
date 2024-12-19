@@ -23,17 +23,29 @@ export default function HomePage() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-primary">BusinessFinder</h1>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">
-              <UserCircle className="inline-block mr-2 h-5 w-5" />
-              {user?.username}
-            </span>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => logout()}
-            >
-              <LogOut className="h-5 w-5" />
-            </Button>
+            {user ? (
+              <>
+                <span className="text-sm text-muted-foreground">
+                  <UserCircle className="inline-block mr-2 h-5 w-5" />
+                  {user.username}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => logout()}
+                >
+                  <LogOut className="h-5 w-5" />
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.location.href = '/auth'}
+              >
+                Login / Sign Up
+              </Button>
+            )}
           </div>
         </div>
       </header>

@@ -33,7 +33,7 @@ export function registerRoutes(app: Express): Server {
       ];
 
       // Save search history if user is logged in
-      if (req.user) {
+      if (req.user?.id) {
         await db.insert(searchHistory).values({
           userId: req.user.id,
           query,

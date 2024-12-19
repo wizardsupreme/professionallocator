@@ -5,7 +5,7 @@ import HomePage from "./pages/HomePage";
 import { useUser } from "./hooks/use-user";
 
 function App() {
-  const { user, isLoading } = useUser();
+  const { isLoading } = useUser();
 
   if (isLoading) {
     return (
@@ -15,13 +15,10 @@ function App() {
     );
   }
 
-  if (!user) {
-    return <AuthPage />;
-  }
-
   return (
     <Switch>
       <Route path="/" component={HomePage} />
+      <Route path="/auth" component={AuthPage} />
     </Switch>
   );
 }
