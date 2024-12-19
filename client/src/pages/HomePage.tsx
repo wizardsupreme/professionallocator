@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { UserCircle, LogOut, Loader2 } from 'lucide-react';
 import { SearchBar } from '../components/SearchBar';
 import { BusinessCard } from '../components/BusinessCard';
 import { MapView } from '../components/MapView';
+import { Pagination } from '../components/Pagination';
 import { useSearch, type Business } from '../hooks/use-search';
 import { useUser } from '../hooks/use-user';
 import { Button } from '@/components/ui/button';
@@ -11,8 +12,18 @@ export default function HomePage() {
   const [searchParams, setSearchParams] = useState({ query: '', location: '' });
   const [view, setView] = useState<'list' | 'map'>('list');
   const [selectedBusiness, setSelectedBusiness] = useState<Business>();
+  const [currentPage, setCurrentPage] = useState(1);
   const { data: businesses, isLoading } = useSearch(searchParams);
   const { user, logout } = useUser();
+
+  const ITEMS_PER_PAGE = 9;
+  const totalPages = Math.ceil((businesses?.length || 0) / ITEMS_PER_PAGE);
+
+  const paginatedBusinesses = useMemo(() => {
+    if (!businesses) return [];
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return businesses.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [businesses, currentPage]);
 
   const handleSearch = (query: string, location: string) => {
     setSearchParams({ query, location });
@@ -92,14 +103,23 @@ export default function HomePage() {
                 <Loader2 className="h-8 w-8 animate-spin mx-auto" />
               </div>
             ) : view === 'list' ? (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {businesses?.map((business) => (
-                  <BusinessCard
-                    key={business.id}
-                    business={business}
-                    onClick={() => setSelectedBusiness(business)}
+              <div className="space-y-6">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {paginatedBusinesses.map((business) => (
+                    <BusinessCard
+                      key={business.id}
+                      business={business}
+                      onClick={() => setSelectedBusiness(business)}
+                    />
+                  ))}
+                </div>
+                {totalPages > 1 && (
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
                   />
-                ))}
+                )}
               </div>
             ) : (
               <div className="h-[600px]">
