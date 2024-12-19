@@ -25,6 +25,7 @@ export default function HomePage() {
 
   const handleSearch = (query: string, location: string) => {
     setSearchParams({ query, location });
+    setCurrentPage(1); // Reset to first page on new search
   };
 
   return (

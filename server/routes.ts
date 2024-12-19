@@ -531,12 +531,23 @@ export function registerRoutes(app: Express): Server {
       // Normalize the query to handle variations
       const normalizedQuery = query.toLowerCase().trim();
       
-      // Find matching professions based on partial matches
+      // Get results based on profession or default
       let results = defaultResults;
-      for (const [profession, businesses] of Object.entries(professionBusinesses)) {
-        if (profession.includes(normalizedQuery) || normalizedQuery.includes(profession)) {
-          results = businesses;
-          break;
+      
+      // Check for profession matches
+      if (normalizedQuery) {
+        for (const [profession, businesses] of Object.entries(professionBusinesses)) {
+          // Make the search more flexible by checking partial matches
+          if (profession.toLowerCase().includes(normalizedQuery) || 
+              normalizedQuery.includes(profession.toLowerCase()) ||
+              // Check individual words
+              profession.toLowerCase().split(' ').some(word => 
+                normalizedQuery.includes(word) || 
+                word.includes(normalizedQuery)
+              )) {
+            results = businesses;
+            break;
+          }
         }
       }
 

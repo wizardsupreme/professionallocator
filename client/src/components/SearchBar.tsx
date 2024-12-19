@@ -245,15 +245,23 @@ export function SearchBar({ onSearch }: SearchBarProps) {
     setShowProfessions(false);
     setSelectedIndex(-1);
     setProfessionSelected(true);
-    setActiveInputField('location');
-    // Focus on location input after selecting profession
-    setTimeout(() => {
-      const locationInput = document.querySelector('input[placeholder="Location"]') as HTMLInputElement;
-      if (locationInput) {
-        locationInput.focus();
-        locationInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    }, 0);
+    
+    // If location is already set, perform the search immediately
+    if (location) {
+      onSearch(profession.name, location);
+    }
+    
+    // Focus on location input if no location is set
+    if (!location) {
+      setActiveInputField('location');
+      setTimeout(() => {
+        const locationInput = document.querySelector('input[placeholder="Location"]') as HTMLInputElement;
+        if (locationInput) {
+          locationInput.focus();
+          locationInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }, 0);
+    }
   };
 
   return (
