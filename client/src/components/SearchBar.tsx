@@ -267,10 +267,10 @@ export function SearchBar({ onSearch }: SearchBarProps) {
             onChange={(e) => {
               const newValue = e.target.value;
               setQuery(newValue);
+              setProfessionSelected(false); // Reset selection when query changes
               if (newValue === '') {
-                setProfessionSelected(false);
                 setShowProfessions(false);
-              } else if (!professionSelected) {
+              } else {
                 setShowProfessions(true);
               }
             }}

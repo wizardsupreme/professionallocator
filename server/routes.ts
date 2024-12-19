@@ -530,15 +530,13 @@ export function registerRoutes(app: Express): Server {
       // Get results based on profession or default
       // Normalize the query to handle variations
       const normalizedQuery = query.toLowerCase().trim();
-      let results = professionBusinesses[normalizedQuery] || defaultResults;
       
-      // If no exact match, try to find partial matches
-      if (results === defaultResults) {
-        const matchingProfession = Object.keys(professionBusinesses).find(profession =>
-          profession.includes(normalizedQuery) || normalizedQuery.includes(profession)
-        );
-        if (matchingProfession) {
-          results = professionBusinesses[matchingProfession];
+      // Find matching professions based on partial matches
+      let results = defaultResults;
+      for (const [profession, businesses] of Object.entries(professionBusinesses)) {
+        if (profession.includes(normalizedQuery) || normalizedQuery.includes(profession)) {
+          results = businesses;
+          break;
         }
       }
 
