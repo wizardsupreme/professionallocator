@@ -233,21 +233,58 @@ export function SearchBar({ onSearch }: SearchBarProps) {
           )}
         </div>
         <div className="flex-1 relative">
-          <MapPin className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-          <Input
-            placeholder="Location"
-            value={location}
-            onChange={(e) => {
-              setLocation(e.target.value);
-              setShowPredictions(true);
-            }}
-            onFocus={() => {
-              setActiveInputField('location');
-              setShowPredictions(true);
-            }}
-            onKeyDown={handleKeyDown}
-            className="pl-10"
-          />
+          <div className="relative flex-1">
+            <MapPin className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+            <Input
+              placeholder="Location"
+              value={location}
+              onChange={(e) => {
+                setLocation(e.target.value);
+                setShowPredictions(true);
+              }}
+              onFocus={() => {
+                setActiveInputField('location');
+                setShowPredictions(true);
+              }}
+              onKeyDown={handleKeyDown}
+              className="pl-10 pr-24"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-xs"
+              onClick={async () => {
+                if (!navigator.geolocation) {
+                  alert("Geolocation is not supported by your browser");
+                  return;
+                }
+
+                try {
+                  const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject);
+                  });
+
+                  const { latitude, longitude } = position.coords;
+                  const geocoder = new google.maps.Geocoder();
+                  const response = await geocoder.geocode({
+                    location: { lat: latitude, lng: longitude }
+                  });
+
+                  if (response.results[0]) {
+                    setLocation(response.results[0].formatted_address);
+                    setShowPredictions(false);
+                  }
+                } catch (error) {
+                  console.error('Error getting location:', error);
+                  alert("Failed to get your location. Please enter it manually.");
+                }
+              }}
+            >
+              <MapPin className="h-3 w-3 mr-1" />
+              Near Me
+            </Button>
+          </div>
           {showPredictions && predictions.length > 0 && (
             <div className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg">
               {predictions.map((prediction, index) => (
