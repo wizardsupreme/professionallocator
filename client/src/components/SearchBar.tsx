@@ -23,11 +23,17 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   const [showPredictions, setShowPredictions] = useState(false);
 
   useEffect(() => {
-    loadMapsApi().then(() => {
-      autocompleteService.current = new google.maps.places.AutocompleteService();
-    }).catch((error) => {
-      console.error("Error loading Google Maps Places:", error);
-    });
+    const initAutocomplete = async () => {
+      try {
+        await loadMapsApi();
+        const { AutocompleteService } = await google.maps.importLibrary("places") as google.maps.PlacesLibrary;
+        autocompleteService.current = new AutocompleteService();
+      } catch (error) {
+        console.error("Error loading Google Maps Places:", error);
+      }
+    };
+    
+    initAutocomplete();
   }, []);
 
   useEffect(() => {

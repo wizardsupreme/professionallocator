@@ -34,14 +34,7 @@ export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapView
         mapInstanceRef.current = new Map(element, {
           zoom: 12,
           center: defaultCenter,
-          mapId: 'DEMO_MAP_ID',
-          styles: [
-            {
-              featureType: "poi",
-              elementType: "labels",
-              stylers: [{ visibility: "off" }]
-            }
-          ]
+          mapId: 'DEMO_MAP_ID'
         });
       } catch (error) {
         console.error("Error initializing map:", error);
