@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Search, MapPin, Loader2 } from 'lucide-react';
+import { Search, MapPin, Loader2, History, Star } from 'lucide-react';
 import { loadMapsApi } from '../lib/maps';
+import { useSearchHistory } from '../hooks/use-search-history';
+import { useUser } from '../hooks/use-user';
 
 interface SearchBarProps {
   onSearch: (query: string, location: string) => void;
@@ -83,6 +85,9 @@ export function SearchBar({ onSearch }: SearchBarProps) {
     return () => clearTimeout(timeoutId);
   }, [location, locationSelected]);
 
+  const { getProfessionSuggestions, getLocationSuggestions } = useSearchHistory();
+  const { user } = useUser();
+
   useEffect(() => {
     if (!query || professionSelected) {
       setProfessionSuggestions([]);
@@ -90,12 +95,30 @@ export function SearchBar({ onSearch }: SearchBarProps) {
       return;
     }
 
+    // Combine static professions with history suggestions
     const filtered = PROFESSIONS.filter(profession =>
       profession.name.toLowerCase().includes(query.toLowerCase())
     );
-    setProfessionSuggestions(filtered);
-    setShowProfessions(filtered.length > 0);
-  }, [query, professionSelected]);
+
+    // Get history suggestions if user is logged in
+    const historySuggestions = user ? getProfessionSuggestions(query) : [];
+
+    // Create a Set to remove duplicates
+    const uniqueSuggestions = new Set([
+      ...historySuggestions.map(suggestion => ({ 
+        name: suggestion, 
+        category: 'Recent Searches',
+        isHistory: true 
+      })),
+      ...filtered.map(profession => ({
+        ...profession,
+        isHistory: false
+      }))
+    ]);
+
+    setProfessionSuggestions(Array.from(uniqueSuggestions));
+    setShowProfessions(uniqueSuggestions.size > 0);
+  }, [query, professionSelected, user]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!showProfessions && !showPredictions) return;
@@ -241,6 +264,11 @@ export function SearchBar({ onSearch }: SearchBarProps) {
                   onClick={() => handleProfessionClick(profession)}
                 >
                   <div className="flex items-center gap-2">
+                    {profession.isHistory ? (
+                      <History className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Star className="h-4 w-4 text-muted-foreground" />
+                    )}
                     <span>{profession.name}</span>
                     <span className="text-sm text-muted-foreground">({profession.category})</span>
                   </div>
@@ -311,13 +339,37 @@ export function SearchBar({ onSearch }: SearchBarProps) {
               Near Me
             </Button>
           </div>
-          {showPredictions && predictions.length > 0 && (
+          {showPredictions && (predictions.length > 0 || (user && getLocationSuggestions(location).length > 0)) && (
             <div className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg">
+              {/* Show history suggestions first */}
+              {user && getLocationSuggestions(location).map((historicLocation, index) => (
+                <div
+                  key={`history-${historicLocation}`}
+                  className={`px-4 py-2 cursor-pointer ${
+                    index === selectedIndex ? 'bg-primary text-primary-foreground' : 'hover:bg-gray-100'
+                  }`}
+                  onClick={() => {
+                    setLocation(historicLocation);
+                    setShowPredictions(false);
+                    setLocationSelected(true);
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <History className="h-4 w-4 text-muted-foreground" />
+                    <span>{historicLocation}</span>
+                    <span className="text-sm text-muted-foreground">(Recent)</span>
+                  </div>
+                </div>
+              ))}
+              
+              {/* Show Google Places predictions */}
               {predictions.map((prediction, index) => (
                 <div
                   key={prediction.place_id}
                   className={`px-4 py-2 cursor-pointer ${
-                    index === selectedIndex ? 'bg-primary text-primary-foreground' : 'hover:bg-gray-100'
+                    index === selectedIndex + (user ? getLocationSuggestions(location).length : 0) 
+                      ? 'bg-primary text-primary-foreground' 
+                      : 'hover:bg-gray-100'
                   }`}
                   onClick={() => handlePredictionClick(prediction)}
                 >
