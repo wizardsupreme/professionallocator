@@ -18,8 +18,6 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
   const [loading, setLoading] = useState(false);
   const reviewsEndRef = useRef<HTMLDivElement>(null);
   
-  if (!business) return null;
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -46,8 +44,10 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
         observer.unobserve(currentRef);
       }
     };
-  }, [reviewsToShow, business.reviewsList]);
+  }, [reviewsToShow, business?.reviewsList]);
 
+  if (!business) return null;
+  
   const hasMoreReviews = business.reviewsList && reviewsToShow < business.reviewsList.length;
 
   return (
