@@ -1,11 +1,12 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, Phone, Globe, Mail, Clock, X, Loader2 } from "lucide-react";
+import { Star, MapPin, Phone, Clock, Loader2 } from "lucide-react";
 import { SiWhatsapp } from 'react-icons/si';
 import type { Business } from "../hooks/use-search";
 import { MapView } from "./MapView";
-import { useState, useRef, useEffect } from 'react';
+import { Pagination } from "./Pagination";
+import { useState, useEffect } from 'react';
 
 
 interface BusinessDetailsProps {
@@ -15,7 +16,8 @@ interface BusinessDetailsProps {
 
 export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const reviewsContainerRef = useRef<HTMLDivElement>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const reviewsPerPage = 5;
 
   useEffect(() => {
     if (business?.reviewsList) {
@@ -28,6 +30,17 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
   }, [business?.reviewsList]);
 
   if (!business) return null;
+
+  const totalPages = business.reviewsList 
+    ? Math.ceil(business.reviewsList.length / reviewsPerPage)
+    : 1;
+
+  const currentReviews = business.reviewsList
+    ? business.reviewsList.slice(
+        (currentPage - 1) * reviewsPerPage,
+        currentPage * reviewsPerPage
+      )
+    : [];
 
   return (
     <Dialog open={!!business} onOpenChange={() => onClose()}>
@@ -95,39 +108,48 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
                 </div>
               </div>
 
-              <div 
-                ref={reviewsContainerRef}
-                className="divide-y overflow-auto"
-                style={{ maxHeight: '60vh' }}
-              >
+              <div className="space-y-4">
                 {isLoading ? (
                   <div className="flex justify-center py-8">
                     <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                   </div>
                 ) : (
-                  business.reviewsList?.map((review, index) => (
-                    <div key={index} className="py-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="flex">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`h-4 w-4 ${
-                                i < Math.floor(review.rating)
-                                  ? "text-yellow-400"
-                                  : "text-gray-300"
-                              }`}
-                            />
-                          ))}
+                  <>
+                    <div className="divide-y">
+                      {currentReviews.map((review, index) => (
+                        <div key={index} className="py-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="flex">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`h-4 w-4 ${
+                                    i < Math.floor(review.rating)
+                                      ? "text-yellow-400"
+                                      : "text-gray-300"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                            <span className="text-sm text-muted-foreground">
+                              {new Date(review.time * 1000).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <p className="text-sm mb-1 font-medium">{review.author_name}</p>
+                          <p className="text-sm text-muted-foreground">{review.text}</p>
                         </div>
-                        <span className="text-sm text-muted-foreground">
-                          {new Date(review.time * 1000).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <p className="text-sm mb-1 font-medium">{review.author_name}</p>
-                      <p className="text-sm text-muted-foreground">{review.text}</p>
+                      ))}
                     </div>
-                  ))
+                    {totalPages > 1 && (
+                      <div className="flex justify-center pt-4">
+                        <Pagination
+                          currentPage={currentPage}
+                          totalPages={totalPages}
+                          onPageChange={setCurrentPage}
+                        />
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
