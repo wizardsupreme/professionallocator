@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Search, MapPin, Loader2 } from 'lucide-react';
-import { Loader } from '@googlemaps/js-api-loader';
+import { loadMapsApi } from '../lib/maps';
 
 interface SearchBarProps {
   onSearch: (query: string, location: string) => void;
@@ -23,13 +23,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   const [showPredictions, setShowPredictions] = useState(false);
 
   useEffect(() => {
-    const loader = new Loader({
-      apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-      version: "weekly",
-      libraries: ["places"]
-    });
-
-    loader.load().then(() => {
+    loadMapsApi().then(() => {
       autocompleteService.current = new google.maps.places.AutocompleteService();
     }).catch((error) => {
       console.error("Error loading Google Maps Places:", error);

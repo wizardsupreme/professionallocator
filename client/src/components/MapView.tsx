@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Business } from '../hooks/use-search';
-import { Loader } from '@googlemaps/js-api-loader';
+import { loadMapsApi } from '../lib/maps';
 
 interface MapViewProps {
   businesses: Business[];
@@ -41,13 +41,7 @@ export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapView
       });
     };
 
-    const loader = new Loader({
-      apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-      version: "weekly",
-      libraries: ["maps", "marker"]
-    });
-
-    loader.load().then(() => {
+    loadMapsApi().then(() => {
       initMap();
     }).catch((error) => {
       console.error("Error loading Google Maps:", error);
