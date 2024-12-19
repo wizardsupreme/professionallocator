@@ -40,6 +40,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   const [loading, setLoading] = useState(false);
   const [activeInputField, setActiveInputField] = useState<'profession' | 'location'>('profession');
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [professionSelected, setProfessionSelected] = useState(false);
   const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
   const [showPredictions, setShowPredictions] = useState(false);
   const [showProfessions, setShowProfessions] = useState(false);
@@ -117,6 +118,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
             const profession = professionSuggestions[selectedIndex];
             setQuery(profession.name);
             setShowProfessions(false);
+            setProfessionSelected(true);
           }
           // Always move to location input when Enter is pressed in profession field
           setActiveInputField('location');
@@ -186,6 +188,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
     setProfessionSuggestions([]);
     setShowProfessions(false);
     setSelectedIndex(-1);
+    setProfessionSelected(true);
     setActiveInputField('location');
     // Focus on location input after selecting profession
     setTimeout(() => {
@@ -205,10 +208,18 @@ export function SearchBar({ onSearch }: SearchBarProps) {
           <Input
             placeholder="Search for businesses or services..."
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setProfessionSelected(false);
+              if (e.target.value) {
+                setShowProfessions(true);
+              }
+            }}
             onFocus={() => {
               setActiveInputField('profession');
-              setShowProfessions(true);
+              if (!professionSelected) {
+                setShowProfessions(true);
+              }
             }}
             onKeyDown={handleKeyDown}
             className="pl-10"
