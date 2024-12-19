@@ -5,6 +5,7 @@ import { db } from "@db";
 import { searchHistory } from "@db/schema";
 import { eq } from "drizzle-orm";
 import { Client } from "@googlemaps/google-maps-services-js";
+import { searchCache } from "./cache";
 
 const googleMapsClient = new Client({});
 
@@ -23,6 +24,15 @@ export function registerRoutes(app: Express): Server {
       if (!query || !location) {
         return res.status(400).send("Query and location are required");
       }
+
+      // Check cache first
+      const cachedResults = searchCache.get(query, location, page, limit);
+      if (cachedResults) {
+        console.log(`Cache hit for query: ${query}, location: ${location}`);
+        return res.json(cachedResults);
+      }
+
+      console.log(`Cache miss for query: ${query}, location: ${location}`);
 
       // First, geocode the location to get coordinates
       const geocodeResponse = await googleMapsClient.geocode({
@@ -82,12 +92,17 @@ export function registerRoutes(app: Express): Server {
       const endIndex = startIndex + limitNum;
       const paginatedResults = results.slice(startIndex, endIndex);
 
-      res.json({
+      const response = {
         results: paginatedResults,
         total: results.length,
         page: pageNum,
         totalPages: Math.ceil(results.length / limitNum)
-      });
+      };
+
+      // Cache the results
+      searchCache.set(query, location, page, limit, response);
+
+      res.json(response);
     } catch (error: any) {
       console.error('Search error:', error);
       res.status(500).send(error.message || "Internal server error");

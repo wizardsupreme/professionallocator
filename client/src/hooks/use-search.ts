@@ -50,5 +50,15 @@ export function useSearch({ query, location, page = 1, limit = 10 }: SearchParam
       return response.json();
     },
     enabled: Boolean(query && location),
+    staleTime: 1000 * 60 * 5, // Data stays fresh for 5 minutes
+    cacheTime: 1000 * 60 * 30, // Cache persists for 30 minutes
+    retry: (failureCount, error) => {
+      // Only retry network errors, not validation errors
+      if (error instanceof Error && error.message.includes('400')) {
+        return false;
+      }
+      return failureCount < 3;
+    },
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
