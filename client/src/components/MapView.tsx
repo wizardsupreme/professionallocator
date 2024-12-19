@@ -59,10 +59,18 @@ export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapView
       const bounds = new google.maps.LatLngBounds();
       
       businesses.forEach(business => {
-        const marker = new AdvancedMarkerElement({
+        const marker = new google.maps.Marker({
           position: business.location,
           map: mapInstanceRef.current,
           title: business.name,
+          animation: google.maps.Animation.DROP,
+          icon: {
+            path: google.maps.SymbolPath.MARKER,
+            fillColor: "#DB4437",
+            fillOpacity: 1,
+            strokeWeight: 1,
+            scale: 10
+          }
         });
 
         marker.addListener('click', () => onMarkerClick(business));

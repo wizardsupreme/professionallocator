@@ -104,7 +104,56 @@ export function registerRoutes(app: Express): Server {
           photos: [],
           location: { lat: baseLocation.lat + 0.01, lng: baseLocation.lng + 0.01 }
         },
-        // ... (previous default results)
+        {
+          id: "2",
+          name: "Business Services Portugal",
+          address: "Rua Augusta 25, Lisboa",
+          phone: "+351 21 987 6543",
+          rating: 4.2,
+          reviews: 89,
+          photos: [],
+          location: { lat: baseLocation.lat - 0.01, lng: baseLocation.lng - 0.01 }
+        },
+        {
+          id: "3",
+          name: "Lisbon Consulting Group",
+          address: "Praça do Comércio, Lisboa",
+          phone: "+351 21 555 0123",
+          rating: 4.8,
+          reviews: 156,
+          photos: [],
+          location: { lat: baseLocation.lat, lng: baseLocation.lng + 0.02 }
+        },
+        {
+          id: "4",
+          name: "Expert Services Network",
+          address: "Av. da República 45, Lisboa",
+          phone: "+351 21 444 5678",
+          rating: 4.3,
+          reviews: 78,
+          photos: [],
+          location: { lat: baseLocation.lat - 0.02, lng: baseLocation.lng + 0.01 }
+        },
+        {
+          id: "5",
+          name: "Metro Business Center",
+          address: "Rua do Ouro 12, Lisboa",
+          phone: "+351 21 333 9876",
+          rating: 4.6,
+          reviews: 112,
+          photos: [],
+          location: { lat: baseLocation.lat + 0.015, lng: baseLocation.lng - 0.02 }
+        },
+        {
+          id: "6",
+          name: "Capital Professional Services",
+          address: "Av. António Augusto de Aguiar 90, Lisboa",
+          phone: "+351 21 222 3456",
+          rating: 4.4,
+          reviews: 95,
+          photos: [],
+          location: { lat: baseLocation.lat - 0.015, lng: baseLocation.lng - 0.01 }
+        }
       ];
 
       const results = professionBusinesses[query.toLowerCase()] || defaultResults;
