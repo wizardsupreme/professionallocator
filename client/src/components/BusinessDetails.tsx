@@ -14,41 +14,20 @@ interface BusinessDetailsProps {
 }
 
 export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
-  const [reviewsToShow, setReviewsToShow] = useState(5);
-  const [loading, setLoading] = useState(false);
-  const reviewsEndRef = useRef<HTMLDivElement>(null);
-  
+  const [isLoading, setIsLoading] = useState(true);
+  const reviewsContainerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const first = entries[0];
-        if (first.isIntersecting && business.reviewsList && reviewsToShow < business.reviewsList.length) {
-          setLoading(true);
-          // Simulate network delay for smooth loading experience
-          setTimeout(() => {
-            setReviewsToShow(prev => prev + 5);
-            setLoading(false);
-          }, 500);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    const currentRef = reviewsEndRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
+    if (business?.reviewsList) {
+      // Add a small delay to ensure smooth animation
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
+      return () => clearTimeout(timer);
     }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, [reviewsToShow, business?.reviewsList]);
+  }, [business?.reviewsList]);
 
   if (!business) return null;
-  
-  const hasMoreReviews = business.reviewsList && reviewsToShow < business.reviewsList.length;
 
   return (
     <Dialog open={!!business} onOpenChange={() => onClose()}>
@@ -116,39 +95,41 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
                 </div>
               </div>
 
-              <div className="divide-y">
-                {business.reviewsList?.slice(0, reviewsToShow).map((review, index) => ( 
-                  <div key={index} className="py-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="flex">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 ${
-                              i < Math.floor(review.rating)
-                                ? "text-yellow-400"
-                                : "text-gray-300"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm text-muted-foreground">
-                        {new Date(review.time).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <p className="text-sm mb-1 font-medium">{review.author_name}</p>
-                    <p className="text-sm text-muted-foreground">{review.text}</p>
+              <div 
+                ref={reviewsContainerRef}
+                className="divide-y overflow-auto"
+                style={{ maxHeight: '60vh' }}
+              >
+                {isLoading ? (
+                  <div className="flex justify-center py-8">
+                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                   </div>
-                ))}
+                ) : (
+                  business.reviewsList?.map((review, index) => (
+                    <div key={index} className="py-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="flex">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`h-4 w-4 ${
+                                i < Math.floor(review.rating)
+                                  ? "text-yellow-400"
+                                  : "text-gray-300"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-sm text-muted-foreground">
+                          {new Date(review.time * 1000).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <p className="text-sm mb-1 font-medium">{review.author_name}</p>
+                      <p className="text-sm text-muted-foreground">{review.text}</p>
+                    </div>
+                  ))
+                )}
               </div>
-              {loading && (
-                <div className="flex justify-center py-4">
-                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                </div>
-              )}
-              {hasMoreReviews && (
-                <div ref={reviewsEndRef} className="h-4" />
-              )}
             </div>
           </TabsContent>
 
