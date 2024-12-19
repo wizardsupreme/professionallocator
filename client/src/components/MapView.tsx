@@ -22,31 +22,34 @@ export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapView
   const [error, setError] = useState<string>();
 
   useEffect(() => {
-    if (!mapRef.current) return;
-
     const initMap = async () => {
-      const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
-      const defaultCenter = { lat: 38.7223, lng: -9.1393 }; // Lisbon default
-      
-      mapInstanceRef.current = new Map(mapRef.current, {
-        zoom: 12,
-        center: defaultCenter,
-        styles: [
-          {
-            featureType: "poi",
-            elementType: "labels",
-            stylers: [{ visibility: "off" }]
-          }
-        ]
-      });
+      try {
+        const element = mapRef.current;
+        if (!element) return;
+
+        await loadMapsApi();
+        const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+        const defaultCenter = { lat: 38.7223, lng: -9.1393 }; // Lisbon default
+        
+        mapInstanceRef.current = new Map(element, {
+          zoom: 12,
+          center: defaultCenter,
+          mapId: 'DEMO_MAP_ID',
+          styles: [
+            {
+              featureType: "poi",
+              elementType: "labels",
+              stylers: [{ visibility: "off" }]
+            }
+          ]
+        });
+      } catch (error) {
+        console.error("Error initializing map:", error);
+        setError("Failed to initialize Google Maps");
+      }
     };
 
-    loadMapsApi().then(() => {
-      initMap();
-    }).catch((error) => {
-      console.error("Error loading Google Maps:", error);
-      setError("Failed to load Google Maps");
-    });
+    initMap();
   }, []);
 
   useEffect(() => {
