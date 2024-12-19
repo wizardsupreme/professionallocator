@@ -18,16 +18,17 @@ declare global {
 export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapViewProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<google.maps.Map>();
-  const markersRef = useRef<google.maps.Marker[]>([]);
+  const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const [error, setError] = useState<string>();
 
   useEffect(() => {
     if (!mapRef.current) return;
 
-    const initMap = () => {
-      const defaultCenter = { lat: 40.7128, lng: -74.0060 }; // NYC default
+    const initMap = async () => {
+      const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+      const defaultCenter = { lat: 38.7223, lng: -9.1393 }; // Lisbon default
       
-      mapInstanceRef.current = new window.google.maps.Map(mapRef.current, {
+      mapInstanceRef.current = new Map(mapRef.current, {
         zoom: 12,
         center: defaultCenter,
         styles: [
@@ -43,41 +44,55 @@ export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapView
     const loader = new Loader({
       apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
       version: "weekly",
+      libraries: ["maps", "marker"]
     });
 
     loader.load().then(() => {
       initMap();
     }).catch((error) => {
       console.error("Error loading Google Maps:", error);
+      setError("Failed to load Google Maps");
     });
   }, []);
 
   useEffect(() => {
-    if (!mapInstanceRef.current || !businesses.length) return;
+    const updateMarkers = async () => {
+      if (!mapInstanceRef.current || !businesses.length) return;
 
-    // Clear existing markers
-    markersRef.current.forEach(marker => marker.setMap(null));
-    markersRef.current = [];
+      const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
 
-    // Add new markers
-    const bounds = new window.google.maps.LatLngBounds();
-    
-    businesses.forEach(business => {
-      const marker = new window.google.maps.Marker({
-        position: business.location,
-        map: mapInstanceRef.current,
-        title: business.name,
-        animation: business === selectedBusiness ? 
-          window.google.maps.Animation.BOUNCE : undefined
+      // Clear existing markers
+      markersRef.current.forEach(marker => marker.map = null);
+      markersRef.current = [];
+
+      // Add new markers
+      const bounds = new google.maps.LatLngBounds();
+      
+      businesses.forEach(business => {
+        const marker = new AdvancedMarkerElement({
+          position: business.location,
+          map: mapInstanceRef.current,
+          title: business.name,
+        });
+
+        marker.addListener('click', () => onMarkerClick(business));
+        markersRef.current.push(marker);
+        bounds.extend(business.location);
       });
 
-      marker.addListener('click', () => onMarkerClick(business));
-      markersRef.current.push(marker);
-      bounds.extend(business.location);
-    });
+      mapInstanceRef.current.fitBounds(bounds);
+    };
 
-    mapInstanceRef.current.fitBounds(bounds);
+    updateMarkers();
   }, [businesses, selectedBusiness]);
+
+  if (error) {
+    return (
+      <div className="w-full h-full min-h-[400px] rounded-lg bg-gray-100 flex items-center justify-center">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div ref={mapRef} className="w-full h-full min-h-[400px] rounded-lg" />
