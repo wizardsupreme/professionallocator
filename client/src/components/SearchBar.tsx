@@ -22,6 +22,9 @@ interface Profession {
 }
 
 const PROFESSIONS: Profession[] = [
+  { name: "Massage Therapist", category: "Healthcare & Wellness" },
+  { name: "Physical Therapist", category: "Healthcare & Wellness" },
+  { name: "Chiropractor", category: "Healthcare & Wellness" },
   { name: "Electrician", category: "Construction & Maintenance" },
   { name: "Plumber", category: "Construction & Maintenance" },
   { name: "Carpenter", category: "Construction & Maintenance" },

@@ -18,6 +18,59 @@ export function registerRoutes(app: Express): Server {
 
       // Mock data based on profession/query with real coordinates
       const professionBusinesses: Record<string, any[]> = {
+        'massage therapist': [
+          // Downtown Lisbon
+          {
+            id: "mt1",
+            name: "Zen Massage & Wellness",
+            address: "Rua da Prata 85, Lisboa",
+            phone: "+351 21 321 4567",
+            rating: 4.8,
+            reviews: 156,
+            photos: [],
+            location: { lat: 38.7107, lng: -9.1368 }
+          },
+          {
+            id: "mt2",
+            name: "Lisboa Massage Center",
+            address: "Av. da Liberdade 155, Lisboa",
+            phone: "+351 21 432 5678",
+            rating: 4.7,
+            reviews: 123,
+            photos: [],
+            location: { lat: 38.7205, lng: -9.1422 }
+          },
+          {
+            id: "mt3",
+            name: "Therapeutic Touch Portugal",
+            address: "Rua Augusta 45, Lisboa",
+            phone: "+351 21 543 6789",
+            rating: 4.9,
+            reviews: 189,
+            photos: [],
+            location: { lat: 38.7108, lng: -9.1387 }
+          },
+          {
+            id: "mt4",
+            name: "Relaxation Oasis",
+            address: "Av. da República 78, Lisboa",
+            phone: "+351 21 654 7890",
+            rating: 4.6,
+            reviews: 92,
+            photos: [],
+            location: { lat: 38.7374, lng: -9.1468 }
+          },
+          {
+            id: "mt5",
+            name: "Holistic Healing Center",
+            address: "Rua do Carmo 34, Lisboa",
+            phone: "+351 21 765 8901",
+            rating: 4.8,
+            reviews: 145,
+            photos: [],
+            location: { lat: 38.7118, lng: -9.1400 }
+          }
+        ],
         'electrician': [
           // Downtown Lisbon
           {
@@ -370,7 +423,19 @@ export function registerRoutes(app: Express): Server {
       const defaultResults = generateDefaultResults();
 
       // Get results based on profession or default
-      let results = professionBusinesses[query.toLowerCase()] || defaultResults;
+      // Normalize the query to handle variations
+      const normalizedQuery = query.toLowerCase().trim();
+      let results = professionBusinesses[normalizedQuery] || defaultResults;
+      
+      // If no exact match, try to find partial matches
+      if (results === defaultResults) {
+        const matchingProfession = Object.keys(professionBusinesses).find(profession =>
+          profession.includes(normalizedQuery) || normalizedQuery.includes(profession)
+        );
+        if (matchingProfession) {
+          results = professionBusinesses[matchingProfession];
+        }
+      }
 
       // Use exact locations without random variations
       results = results.map(result => ({
