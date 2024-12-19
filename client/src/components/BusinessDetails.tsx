@@ -39,17 +39,16 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
               <span>{business.reviews} reviews</span>
             </div>
           </div>
-          <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={onClose}
-              className="absolute right-4 top-4"
-            >
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </Button>
-
         </div>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={onClose}
+          className="absolute right-4 top-4"
+        >
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </Button>
 
         <Tabs defaultValue="about" className="w-full">
           <TabsList className="w-full">
