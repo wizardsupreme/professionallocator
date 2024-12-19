@@ -83,7 +83,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   }, [location]);
 
   useEffect(() => {
-    if (!query) {
+    if (!query || professionSelected) {
       setProfessionSuggestions([]);
       setShowProfessions(false);
       return;
@@ -94,7 +94,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
     );
     setProfessionSuggestions(filtered);
     setShowProfessions(filtered.length > 0);
-  }, [query]);
+  }, [query, professionSelected]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!showProfessions && !showPredictions) return;
@@ -209,15 +209,19 @@ export function SearchBar({ onSearch }: SearchBarProps) {
             placeholder="Search for businesses or services..."
             value={query}
             onChange={(e) => {
-              setQuery(e.target.value);
-              setProfessionSelected(false);
-              if (e.target.value) {
+              const newValue = e.target.value;
+              setQuery(newValue);
+              if (newValue === '') {
+                setProfessionSelected(false);
+                setShowProfessions(false);
+              } else if (!professionSelected) {
                 setShowProfessions(true);
               }
             }}
             onFocus={() => {
               setActiveInputField('profession');
-              if (!professionSelected) {
+              // Only show professions if we haven't selected one and have a query
+              if (!professionSelected && query.length > 0) {
                 setShowProfessions(true);
               }
             }}
