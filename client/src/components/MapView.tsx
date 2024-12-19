@@ -7,6 +7,7 @@ interface MapViewProps {
   businesses: Business[];
   selectedBusiness?: Business;
   onMarkerClick: (business: Business) => void;
+  userLocation?: google.maps.LatLngLiteral;
 }
 
 interface InfoWindowContent {
@@ -14,7 +15,7 @@ interface InfoWindowContent {
   business: Business;
 }
 
-export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapViewProps) {
+export function MapView({ businesses, selectedBusiness, onMarkerClick, userLocation }: MapViewProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<google.maps.Map>();
   const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
@@ -145,6 +146,28 @@ export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapView
         markersRef.current = [];
 
         const bounds = new google.maps.LatLngBounds();
+        
+        // Add user location marker if available
+        if (userLocation) {
+          const userPin = document.createElement('div');
+          userPin.innerHTML = `
+            <div style="cursor: pointer; transform-origin: center bottom; position: relative;">
+              <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="16" cy="16" r="8" fill="#4285F4" stroke="white" stroke-width="2"/>
+                <circle cx="16" cy="16" r="14" fill="#4285F4" fill-opacity="0.2" stroke="#4285F4" stroke-width="2"/>
+              </svg>
+            </div>
+          `;
+
+          const userMarker = new google.maps.marker.AdvancedMarkerElement({
+            map: mapInstanceRef.current,
+            position: userLocation,
+            title: "Your Location",
+            content: userPin
+          });
+
+          bounds.extend(userLocation);
+        }
         const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
         
         businesses.forEach(business => {

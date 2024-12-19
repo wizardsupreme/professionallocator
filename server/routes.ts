@@ -10,7 +10,12 @@ export function registerRoutes(app: Express): Server {
 
   app.get("/api/search", async (req, res) => {
     try {
-      const { query, location } = req.query as { query: string, location: string };
+      const { query, location, page = '1', limit = '10' } = req.query as { 
+        query: string, 
+        location: string,
+        page?: string,
+        limit?: string 
+      };
       
       if (!query || !location) {
         return res.status(400).send("Query and location are required");
@@ -456,7 +461,19 @@ export function registerRoutes(app: Express): Server {
         });
       }
 
-      res.json(results);
+      // Apply pagination
+      const pageNum = parseInt(page);
+      const limitNum = parseInt(limit);
+      const startIndex = (pageNum - 1) * limitNum;
+      const endIndex = startIndex + limitNum;
+      const paginatedResults = results.slice(startIndex, endIndex);
+      
+      res.json({
+        results: paginatedResults,
+        total: results.length,
+        page: pageNum,
+        totalPages: Math.ceil(results.length / limitNum)
+      });
     } catch (error) {
       res.status(500).send("Internal server error");
     }

@@ -8,7 +8,7 @@ import { useSearchHistory } from '../hooks/use-search-history';
 import { useUser } from '../hooks/use-user';
 
 interface SearchBarProps {
-  onSearch: (query: string, location: string) => void;
+  onSearch: (query: string, location: string, coordinates?: google.maps.LatLngLiteral) => void;
 }
 
 interface PlacePrediction {
@@ -359,9 +359,14 @@ export function SearchBar({ onSearch }: SearchBarProps) {
                   });
 
                   if (response.results[0]) {
-                    setLocation(response.results[0].formatted_address);
+                    const result = response.results[0];
+                    setLocation(result.formatted_address);
                     setShowPredictions(false);
                     setLocationSelected(true);
+                    onSearch(query, result.formatted_address, {
+                      lat: latitude,
+                      lng: longitude
+                    });
                   }
                 } catch (error) {
                   console.error('Error getting location:', error);
