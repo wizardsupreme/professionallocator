@@ -1,11 +1,11 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, Phone, Globe, Mail, Clock, X } from "lucide-react";
+import { Star, MapPin, Phone, Globe, Mail, Clock, X, Loader2 } from "lucide-react";
 import { SiWhatsapp } from 'react-icons/si';
 import type { Business } from "../hooks/use-search";
 import { MapView } from "./MapView";
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 
 interface BusinessDetailsProps {
