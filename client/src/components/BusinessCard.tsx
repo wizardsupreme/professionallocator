@@ -33,7 +33,13 @@ export function BusinessCard({ business, onClick }: BusinessCardProps) {
             </div>
             <div className="flex items-center gap-1 justify-end mt-1">
               <Phone className="h-3 w-3" />
-              <span className="text-xs">{business.phone}</span>
+              <a 
+                href={`tel:${business.phone}`}
+                className="text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {business.phone}
+              </a>
             </div>
           </div>
         </div>
