@@ -53,18 +53,16 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
   return (
     <Dialog open={!!business} onOpenChange={() => onClose()}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+        <DialogHeader className="space-y-2">
           <DialogTitle className="text-2xl font-bold">{business.name}</DialogTitle>
-          <DialogDescription>
-            <div className="flex items-center gap-2 text-sm mt-1">
-              <div className="flex items-center">
-                <Star className="h-4 w-4 text-yellow-400 mr-1" />
-                <span>{business.rating}</span>
-              </div>
-              <span>·</span>
-              <span>{business.reviews} reviews</span>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center">
+              <Star className="h-4 w-4 text-yellow-400 mr-1" />
+              <span>{business.rating}</span>
             </div>
-          </DialogDescription>
+            <span>·</span>
+            <span>{business.reviews} reviews</span>
+          </div>
         </DialogHeader>
 
         <Tabs defaultValue="about" className="w-full">
