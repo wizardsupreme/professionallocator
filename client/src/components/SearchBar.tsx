@@ -41,6 +41,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   const [activeInputField, setActiveInputField] = useState<'profession' | 'location'>('profession');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [professionSelected, setProfessionSelected] = useState(false);
+  const [locationSelected, setLocationSelected] = useState(false);
   const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
   const [showPredictions, setShowPredictions] = useState(false);
   const [showProfessions, setShowProfessions] = useState(false);
@@ -60,7 +61,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   }, []);
 
   useEffect(() => {
-    if (!location || !autocompleteService.current) return;
+    if (!location || !autocompleteService.current || locationSelected) return;
     
     const fetchPredictions = async () => {
       setLoading(true);
@@ -80,7 +81,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
 
     const timeoutId = setTimeout(fetchPredictions, 300);
     return () => clearTimeout(timeoutId);
-  }, [location]);
+  }, [location, locationSelected]);
 
   useEffect(() => {
     if (!query || professionSelected) {
@@ -181,6 +182,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
     setPredictions([]);
     setShowPredictions(false);
     setSelectedIndex(-1);
+    setLocationSelected(true);
   };
 
   const handleProfessionClick = (profession: Profession) => {
@@ -254,12 +256,20 @@ export function SearchBar({ onSearch }: SearchBarProps) {
               placeholder="Location"
               value={location}
               onChange={(e) => {
-                setLocation(e.target.value);
-                setShowPredictions(true);
+                const newValue = e.target.value;
+                setLocation(newValue);
+                if (newValue === '') {
+                  setLocationSelected(false);
+                  setShowPredictions(false);
+                } else if (!locationSelected) {
+                  setShowPredictions(true);
+                }
               }}
               onFocus={() => {
                 setActiveInputField('location');
-                setShowPredictions(true);
+                if (!locationSelected && location.length > 0) {
+                  setShowPredictions(true);
+                }
               }}
               onKeyDown={handleKeyDown}
               className="pl-10 pr-24"
@@ -289,6 +299,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
                   if (response.results[0]) {
                     setLocation(response.results[0].formatted_address);
                     setShowPredictions(false);
+                    setLocationSelected(true);
                   }
                 } catch (error) {
                   console.error('Error getting location:', error);
