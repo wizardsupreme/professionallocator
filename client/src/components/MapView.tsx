@@ -8,9 +8,10 @@ interface MapViewProps {
   onMarkerClick: (business: Business) => void;
 }
 
+// Explicitly declare types for Google Maps
 declare global {
   interface Window {
-    google: any;
+    google: typeof google;
   }
 }
 
@@ -18,6 +19,7 @@ export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapView
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<google.maps.Map>();
   const markersRef = useRef<google.maps.Marker[]>([]);
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     if (!mapRef.current) return;

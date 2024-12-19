@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { setupAuth } from "./auth";
+import { setupAuth } from "./auth.js";
 import { db } from "@db";
 import { searchHistory } from "@db/schema";
 import { eq } from "drizzle-orm";
