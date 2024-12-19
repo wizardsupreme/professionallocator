@@ -48,7 +48,6 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
               <X className="h-4 w-4" />
               <span className="sr-only">Close</span>
             </Button>
-            {/* Removed duplicate close button */}
 
         </div>
 
