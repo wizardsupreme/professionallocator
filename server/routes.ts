@@ -74,6 +74,106 @@ export function registerRoutes(app: Express): Server {
             reviews: 145,
             photos: [],
             location: { lat: 38.7118, lng: -9.1400 }
+          },
+          {
+            id: "mt6",
+            name: "Urban Wellness Spa",
+            address: "Rua do Século 12, Lisboa",
+            phone: "+351 21 876 9012",
+            rating: 4.5,
+            reviews: 78,
+            photos: [],
+            location: { lat: 38.7156, lng: -9.1433 }
+          },
+          {
+            id: "mt7",
+            name: "Serenity Massage Studio",
+            address: "Av. António Augusto de Aguiar 122, Lisboa",
+            phone: "+351 21 987 0123",
+            rating: 4.7,
+            reviews: 112,
+            photos: [],
+            location: { lat: 38.7331, lng: -9.1520 }
+          },
+          {
+            id: "mt8",
+            name: "Balance & Harmony Center",
+            address: "Rua das Flores 55, Lisboa",
+            phone: "+351 21 098 1234",
+            rating: 4.9,
+            reviews: 167,
+            photos: [],
+            location: { lat: 38.7089, lng: -9.1355 }
+          },
+          {
+            id: "mt9",
+            name: "Wellness Journey",
+            address: "Praça do Comércio 15, Lisboa",
+            phone: "+351 21 109 2345",
+            rating: 4.6,
+            reviews: 98,
+            photos: [],
+            location: { lat: 38.7075, lng: -9.1364 }
+          },
+          {
+            id: "mt10",
+            name: "Healing Hands Spa",
+            address: "Rua Nova do Almada 28, Lisboa",
+            phone: "+351 21 210 3456",
+            rating: 4.8,
+            reviews: 143,
+            photos: [],
+            location: { lat: 38.7102, lng: -9.1397 }
+          },
+          {
+            id: "mt11",
+            name: "Tranquil Touch Therapy",
+            address: "Rua Garrett 45, Lisboa",
+            phone: "+351 21 321 4567",
+            rating: 4.7,
+            reviews: 89,
+            photos: [],
+            location: { lat: 38.7112, lng: -9.1422 }
+          },
+          {
+            id: "mt12",
+            name: "Mind & Body Balance",
+            address: "Av. da República 234, Lisboa",
+            phone: "+351 21 432 5678",
+            rating: 4.5,
+            reviews: 76,
+            photos: [],
+            location: { lat: 38.7374, lng: -9.1468 }
+          },
+          {
+            id: "mt13",
+            name: "Peaceful Moments Spa",
+            address: "Rua do Ouro 67, Lisboa",
+            phone: "+351 21 543 6789",
+            rating: 4.6,
+            reviews: 104,
+            photos: [],
+            location: { lat: 38.7103, lng: -9.1374 }
+          },
+          {
+            id: "mt14",
+            name: "Natural Healing Studio",
+            address: "Av. Almirante Reis 189, Lisboa",
+            phone: "+351 21 654 7890",
+            rating: 4.8,
+            reviews: 132,
+            photos: [],
+            location: { lat: 38.7198, lng: -9.1347 }
+          },
+          {
+            id: "mt15",
+            name: "Lotus Wellness Center",
+            address: "Rua da Madalena 91, Lisboa",
+            phone: "+351 21 765 8901",
+            rating: 4.7,
+            reviews: 118,
+            photos: [],
+            location: { lat: 38.7112, lng: -9.1352 }
           }
         ],
         'electrician': [
