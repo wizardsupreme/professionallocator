@@ -18,9 +18,9 @@ export function registerRoutes(app: Express): Server {
 
       // Mock data for testing
       const mockLocations = {
-        "lisbon": { lat: 38.7223, lng: -9.1393 },
-        "porto": { lat: 41.1579, lng: -8.6291 },
-        "faro": { lat: 37.0193, lng: -7.9304 }
+        "lisbon": { lat: 38.7223, lng: -9.1393 }, // Praça do Comércio
+        "porto": { lat: 41.1579, lng: -8.6291 }, // Avenida dos Aliados
+        "faro": { lat: 37.0193, lng: -7.9304 } // Faro Old Town
       };
 
       const baseLocation = mockLocations[location.toLowerCase()] || { lat: 38.7223, lng: -9.1393 }; // Default to Lisbon
@@ -159,12 +159,12 @@ export function registerRoutes(app: Express): Server {
       // Get results based on profession or default
       let results = professionBusinesses[query.toLowerCase()] || defaultResults;
 
-      // Ensure we're showing all results (no limit)
+      // Use exact locations without random variations
       results = results.map(result => ({
         ...result,
         location: {
-          lat: result.location.lat + (Math.random() - 0.5) * 0.01, // Add slight variation to prevent overlapping
-          lng: result.location.lng + (Math.random() - 0.5) * 0.01
+          lat: result.location.lat,
+          lng: result.location.lng
         }
       }));
 
