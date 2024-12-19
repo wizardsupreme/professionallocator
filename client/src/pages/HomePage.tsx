@@ -1,9 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { UserCircle, LogOut, Loader2 } from 'lucide-react';
 import { SearchBar } from '../components/SearchBar';
 import { BusinessCard } from '../components/BusinessCard';
 import { MapView } from '../components/MapView';
 import { Pagination } from '../components/Pagination';
+import { BusinessDetails } from '../components/BusinessDetails';
 import { useSearch, type Business } from '../hooks/use-search';
 import { useUser } from '../hooks/use-user';
 import { Button } from '@/components/ui/button';
@@ -131,6 +132,12 @@ export default function HomePage() {
                 )}
               </div>
             )}
+
+            {/* Business Details Modal */}
+            <BusinessDetails 
+              business={selectedBusiness} 
+              onClose={() => setSelectedBusiness(undefined)} 
+            />
           </div>
         )}
       </main>
