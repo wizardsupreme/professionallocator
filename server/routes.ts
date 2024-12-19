@@ -29,14 +29,8 @@ export function registerRoutes(app: Express): Server {
         return res.status(400).send("Query and location are required");
       }
 
-      // Check cache first
-      const cachedResults = searchCache.get(query, location, page, limit);
-      if (cachedResults) {
-        console.log(`Cache hit for query: ${query}, location: ${location}`);
-        return res.json(cachedResults);
-      }
-
-      console.log(`Cache miss for query: ${query}, location: ${location}`);
+      // Caching temporarily disabled
+      console.log(`Processing search request for query: ${query}, location: ${location}`);
 
       // First, geocode the location to get coordinates
       const geocodeResponse = await googleMapsClient.geocode({
@@ -117,9 +111,7 @@ export function registerRoutes(app: Express): Server {
         totalPages: Math.ceil(results.length / limitNum)
       };
 
-      // Cache the results
-      searchCache.set(query, location, page, limit, response);
-
+      // Caching temporarily disabled
       res.json(response);
     } catch (error: any) {
       console.error('Search error:', error);
