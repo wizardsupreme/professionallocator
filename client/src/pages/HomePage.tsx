@@ -1,11 +1,11 @@
 import { useState } from 'react';
+import { UserCircle, LogOut, Loader2 } from 'lucide-react';
 import { SearchBar } from '../components/SearchBar';
 import { BusinessCard } from '../components/BusinessCard';
 import { MapView } from '../components/MapView';
 import { useSearch, type Business } from '../hooks/use-search';
 import { useUser } from '../hooks/use-user';
 import { Button } from '@/components/ui/button';
-import { UserCircle, LogOut } from 'lucide-react';
 
 export default function HomePage() {
   const [searchParams, setSearchParams] = useState({ query: '', location: '' });
