@@ -148,9 +148,10 @@ export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapView
         const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
         
         businesses.forEach(business => {
+          // Create marker element
           const pin = document.createElement('div');
           pin.innerHTML = `
-            <div style="cursor: pointer; transform-origin: center bottom;">
+            <div style="cursor: pointer; transform-origin: center bottom; position: relative;">
               <svg width="32" height="48" viewBox="0 0 32 48" xmlns="http://www.w3.org/2000/svg">
                 <path d="M16 0C7.164 0 0 7.164 0 16c0 12 16 32 16 32s16-20 16-32c0-8.836-7.164-16-16-16z" fill="#FF4444"/>
                 <circle cx="16" cy="16" r="8" fill="white"/>
@@ -158,13 +159,20 @@ export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapView
             </div>
           `;
 
+          // Create marker at exact business location
+          const position = {
+            lat: business.location.lat,
+            lng: business.location.lng
+          };
+
           const marker = new AdvancedMarkerElement({
             map: mapInstanceRef.current,
-            position: business.location,
+            position,
             title: business.name,
             content: pin
           });
 
+          // Add click handler
           marker.addListener('click', () => {
             const pinElement = pin.querySelector('div');
             if (pinElement) {
@@ -173,11 +181,11 @@ export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapView
                 pinElement.style.animation = '';
               }, 500);
             }
-            handleMarkerClick(business, business.location);
+            handleMarkerClick(business, position);
           });
             
           markersRef.current.push(marker);
-          bounds.extend(business.location);
+          bounds.extend(position);
         });
 
         // Close info window when clicking on the map

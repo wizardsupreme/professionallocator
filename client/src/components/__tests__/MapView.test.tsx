@@ -55,7 +55,7 @@ describe('MapView', () => {
     });
   });
 
-  it('creates markers with correct styling for each business', async () => {
+  it('creates markers with correct styling and position for each business', async () => {
     render(
       <MapView
         businesses={mockBusinesses}
@@ -68,18 +68,30 @@ describe('MapView', () => {
       expect(google.maps.marker.AdvancedMarkerElement)
         .toHaveBeenCalledTimes(mockBusinesses.length);
       
-      // Verify marker content contains SVG with correct styling
+      // Verify marker positioning and styling
       const markerCalls = (google.maps.marker.AdvancedMarkerElement as any).mock.calls;
       markerCalls.forEach((call: any, index: number) => {
         const options = call[0];
-        expect(options.position).toEqual(mockBusinesses[index].location);
-        expect(options.title).toBe(mockBusinesses[index].name);
+        const business = mockBusinesses[index];
         
-        // Check if marker content includes SVG
+        // Verify exact position matching
+        expect(options.position.lat).toBe(business.location.lat);
+        expect(options.position.lng).toBe(business.location.lng);
+        expect(options.title).toBe(business.name);
+        
+        // Check marker appearance
         const content = options.content as HTMLDivElement;
         expect(content.innerHTML).toContain('<svg');
         expect(content.innerHTML).toContain('fill="#FF4444"');
+        expect(content.querySelector('div')?.style.transformOrigin).toBe('center bottom');
       });
+
+      // Verify bounds calculation includes all markers
+      const bounds = new google.maps.LatLngBounds();
+      mockBusinesses.forEach(business => {
+        bounds.extend(business.location);
+      });
+      expect(mockMapInstance.fitBounds).toHaveBeenCalledWith(bounds, expect.any(Object));
     });
   });
 
