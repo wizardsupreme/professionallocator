@@ -63,8 +63,8 @@ export default function HomePage() {
       </header>
 
       <main className="flex-1 flex flex-col">
-        <div className="flex-1 flex items-center justify-center px-4">
-          <div className="w-full max-w-3xl">
+        <div className={`px-4 py-8 ${!businesses?.length ? 'flex-1 flex items-center justify-center' : ''}`}>
+          <div className="w-full max-w-3xl mx-auto">
             <SearchBar onSearch={handleSearch} />
           </div>
         </div>

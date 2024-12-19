@@ -133,9 +133,22 @@ export function SearchBar({ onSearch }: SearchBarProps) {
         setSelectedIndex(-1);
         break;
       case 'Tab':
-        if (activeInputField === 'profession' && query) {
-          e.preventDefault();
-          setActiveInputField('location');
+        if (e.shiftKey) {
+          // Shift+Tab: Move focus backwards
+          if (activeInputField === 'location') {
+            e.preventDefault();
+            setActiveInputField('profession');
+            const professionInput = document.querySelector('input[placeholder="Search for businesses or services..."]') as HTMLInputElement;
+            if (professionInput) professionInput.focus();
+          }
+        } else {
+          // Tab: Move focus forward
+          if (activeInputField === 'profession') {
+            e.preventDefault();
+            setActiveInputField('location');
+            const locationInput = document.querySelector('input[placeholder="Location"]') as HTMLInputElement;
+            if (locationInput) locationInput.focus();
+          }
         }
         setShowProfessions(false);
         setShowPredictions(false);
