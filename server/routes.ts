@@ -7,6 +7,10 @@ import { eq } from "drizzle-orm";
 import { Client } from "@googlemaps/google-maps-services-js";
 import { searchCache } from "./cache";
 
+// Clear the cache when server starts up
+console.log('Clearing search cache on server startup...');
+searchCache.clear();
+
 const googleMapsClient = new Client({});
 
 export function registerRoutes(app: Express): Server {
@@ -59,20 +63,34 @@ export function registerRoutes(app: Express): Server {
         }
       });
 
-      const results = placesResponse.data.results.map(place => ({
-        id: place.place_id,
-        name: place.name,
-        address: place.formatted_address || '',
-        phone: place.formatted_phone_number || '',
-        rating: place.rating || 0,
-        reviews: place.user_ratings_total || 0,
-        photos: place.photos ? place.photos.map(photo => 
-          `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${process.env.VITE_GOOGLE_MAPS_API_KEY}`
-        ) : [],
-        location: {
-          lat: place.geometry?.location.lat || lat,
-          lng: place.geometry?.location.lng || lng
-        }
+      // Fetch detailed information for each place including reviews
+      const results = await Promise.all(placesResponse.data.results.map(async place => {
+        const detailsResponse = await googleMapsClient.placeDetails({
+          params: {
+            place_id: place.place_id,
+            fields: ['name', 'formatted_address', 'formatted_phone_number', 'rating', 'user_ratings_total', 'photos', 'reviews', 'geometry'],
+            key: process.env.VITE_GOOGLE_MAPS_API_KEY!
+          }
+        });
+
+        const details = detailsResponse.data.result;
+        
+        return {
+          id: place.place_id,
+          name: details.name || place.name,
+          address: details.formatted_address || place.formatted_address || '',
+          phone: details.formatted_phone_number || '',
+          rating: details.rating || place.rating || 0,
+          reviews: details.user_ratings_total || place.user_ratings_total || 0,
+          photos: details.photos ? details.photos.map(photo => 
+            `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${process.env.VITE_GOOGLE_MAPS_API_KEY}`
+          ) : [],
+          location: {
+            lat: details.geometry?.location.lat || place.geometry?.location.lat || lat,
+            lng: details.geometry?.location.lng || place.geometry?.location.lng || lng
+          },
+          reviewsList: details.reviews || []
+        };
       }));
 
       // Save search history if user is logged in

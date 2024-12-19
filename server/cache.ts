@@ -58,6 +58,11 @@ class SearchCache {
       }
     }
   }
+
+  clear(): void {
+    console.log(`Clearing ${this.cache.size} entries from search cache`);
+    this.cache.clear();
+  }
 }
 
 // Export a singleton instance
