@@ -19,6 +19,7 @@ export function registerRoutes(app: Express): Server {
       // Mock data based on profession/query with real coordinates
       const professionBusinesses: Record<string, any[]> = {
         'electrician': [
+          // Downtown Lisbon
           {
             id: "1",
             name: "Lisboa Electrical Services",
@@ -27,7 +28,7 @@ export function registerRoutes(app: Express): Server {
             rating: 4.7,
             reviews: 89,
             photos: [],
-            location: { lat: 38.7107, lng: -9.1368 } // Exact coordinates for Rua da Prata 125
+            location: { lat: 38.7107, lng: -9.1368 }
           },
           {
             id: "2",
@@ -37,8 +38,9 @@ export function registerRoutes(app: Express): Server {
             rating: 4.5,
             reviews: 67,
             photos: [],
-            location: { lat: 38.7198, lng: -9.1347 } // Exact coordinates for Av. Almirante Reis 45
+            location: { lat: 38.7198, lng: -9.1347 }
           },
+          // Baixa-Chiado Area
           {
             id: "3",
             name: "Electric Pros Portugal",
@@ -47,8 +49,9 @@ export function registerRoutes(app: Express): Server {
             rating: 4.8,
             reviews: 124,
             photos: [],
-            location: { lat: 38.7108, lng: -9.1387 } // Exact coordinates for Rua Augusta 78
+            location: { lat: 38.7108, lng: -9.1387 }
           },
+          // Avenidas Novas
           {
             id: "4",
             name: "24/7 Electrical Services",
@@ -57,8 +60,9 @@ export function registerRoutes(app: Express): Server {
             rating: 4.3,
             reviews: 45,
             photos: [],
-            location: { lat: 38.7374, lng: -9.1468 } // Exact coordinates for Av. da República 234
+            location: { lat: 38.7374, lng: -9.1468 }
           },
+          // Chiado
           {
             id: "5",
             name: "Smart Electric Solutions",
@@ -67,8 +71,9 @@ export function registerRoutes(app: Express): Server {
             rating: 4.6,
             reviews: 93,
             photos: [],
-            location: { lat: 38.7118, lng: -9.1400 } // Exact coordinates for Rua do Carmo 56
+            location: { lat: 38.7118, lng: -9.1400 }
           },
+          // Avenida Area
           {
             id: "6",
             name: "Green Electric Company",
@@ -77,75 +82,292 @@ export function registerRoutes(app: Express): Server {
             rating: 4.4,
             reviews: 78,
             photos: [],
-            location: { lat: 38.7205, lng: -9.1422 } // Exact coordinates for Av. da Liberdade 189
+            location: { lat: 38.7205, lng: -9.1422 }
+          },
+          // Campo Pequeno
+          {
+            id: "7",
+            name: "Campo Pequeno Electricians",
+            address: "Av. República 46, Lisboa",
+            phone: "+351 21 789 0123",
+            rating: 4.2,
+            reviews: 56,
+            photos: [],
+            location: { lat: 38.7430, lng: -9.1470 }
+          },
+          // Parque das Nações
+          {
+            id: "8",
+            name: "Modern Electric Solutions",
+            address: "Alameda dos Oceanos 33, Lisboa",
+            phone: "+351 21 890 1234",
+            rating: 4.6,
+            reviews: 112,
+            photos: [],
+            location: { lat: 38.7687, lng: -9.0974 }
+          },
+          // Benfica
+          {
+            id: "9",
+            name: "Benfica Electric Experts",
+            address: "Estrada de Benfica 245, Lisboa",
+            phone: "+351 21 901 2345",
+            rating: 4.3,
+            reviews: 89,
+            photos: [],
+            location: { lat: 38.7506, lng: -9.1988 }
+          },
+          // Alcântara
+          {
+            id: "10",
+            name: "Alcântara Power Services",
+            address: "Rua de Alcântara 92, Lisboa",
+            phone: "+351 21 012 3456",
+            rating: 4.4,
+            reviews: 67,
+            photos: [],
+            location: { lat: 38.7033, lng: -9.1744 }
+          },
+          // Belém
+          {
+            id: "11",
+            name: "Belém Electrical Masters",
+            address: "Rua de Belém 45, Lisboa",
+            phone: "+351 21 123 4567",
+            rating: 4.7,
+            reviews: 134,
+            photos: [],
+            location: { lat: 38.6970, lng: -9.2069 }
+          },
+          // Alfama
+          {
+            id: "12",
+            name: "Alfama Electric Works",
+            address: "Rua dos Remédios 45, Lisboa",
+            phone: "+351 21 234 5678",
+            rating: 4.5,
+            reviews: 78,
+            photos: [],
+            location: { lat: 38.7121, lng: -9.1307 }
+          },
+          // Graça
+          {
+            id: "13",
+            name: "Graça Power Systems",
+            address: "Rua da Graça 89, Lisboa",
+            phone: "+351 21 345 6789",
+            rating: 4.2,
+            reviews: 45,
+            photos: [],
+            location: { lat: 38.7178, lng: -9.1313 }
+          },
+          // Príncipe Real
+          {
+            id: "14",
+            name: "Royal Electric Services",
+            address: "Rua do Príncipe Real 34, Lisboa",
+            phone: "+351 21 456 7890",
+            rating: 4.8,
+            reviews: 156,
+            photos: [],
+            location: { lat: 38.7178, lng: -9.1477 }
+          },
+          // Cais do Sodré
+          {
+            id: "15",
+            name: "Riverside Electrical",
+            address: "Rua do Alecrim 23, Lisboa",
+            phone: "+351 21 567 8901",
+            rating: 4.6,
+            reviews: 98,
+            photos: [],
+            location: { lat: 38.7070, lng: -9.1436 }
+          },
+          // São Bento
+          {
+            id: "16",
+            name: "São Bento Electric Co",
+            address: "Rua de São Bento 199, Lisboa",
+            phone: "+351 21 678 9012",
+            rating: 4.4,
+            reviews: 87,
+            photos: [],
+            location: { lat: 38.7153, lng: -9.1527 }
+          },
+          // Campo de Ourique
+          {
+            id: "17",
+            name: "Campo Electric Experts",
+            address: "Rua Ferreira Borges 67, Lisboa",
+            phone: "+351 21 789 0123",
+            rating: 4.3,
+            reviews: 76,
+            photos: [],
+            location: { lat: 38.7183, lng: -9.1670 }
+          },
+          // Alvalade
+          {
+            id: "18",
+            name: "Alvalade Power Solutions",
+            address: "Av. da Igreja 45, Lisboa",
+            phone: "+351 21 890 1234",
+            rating: 4.5,
+            reviews: 92,
+            photos: [],
+            location: { lat: 38.7520, lng: -9.1450 }
+          },
+          // Lumiar
+          {
+            id: "19",
+            name: "Lumiar Electric Services",
+            address: "Alameda das Linhas de Torres 156, Lisboa",
+            phone: "+351 21 901 2345",
+            rating: 4.4,
+            reviews: 65,
+            photos: [],
+            location: { lat: 38.7700, lng: -9.1600 }
+          },
+          // Areeiro
+          {
+            id: "20",
+            name: "Areeiro Power Systems",
+            address: "Av. de Roma 89, Lisboa",
+            phone: "+351 21 012 3456",
+            rating: 4.6,
+            reviews: 108,
+            photos: [],
+            location: { lat: 38.7420, lng: -9.1340 }
           }
         ],
         // Add more profession-specific businesses here
       };
 
-      // Default results with exact coordinates
-      const defaultResults = [
-        {
-          id: "1",
-          name: "Professional Solutions Lda",
-          address: "Av. da Liberdade 110, Lisboa",
-          phone: "+351 21 123 4567",
-          rating: 4.5,
-          reviews: 123,
-          photos: [],
-          location: { lat: 38.7189, lng: -9.1428 } // Exact coordinates for Av. da Liberdade 110
-        },
-        {
-          id: "2",
-          name: "Business Services Portugal",
-          address: "Rua Augusta 25, Lisboa",
-          phone: "+351 21 987 6543",
-          rating: 4.2,
-          reviews: 89,
-          photos: [],
-          location: { lat: 38.7099, lng: -9.1397 } // Exact coordinates for Rua Augusta 25
-        },
-        {
-          id: "3",
-          name: "Lisbon Consulting Group",
-          address: "Praça do Comércio, Lisboa",
-          phone: "+351 21 555 0123",
-          rating: 4.8,
-          reviews: 156,
-          photos: [],
-          location: { lat: 38.7075, lng: -9.1364 } // Exact coordinates for Praça do Comércio
-        },
-        {
-          id: "4",
-          name: "Expert Services Network",
-          address: "Av. da República 45, Lisboa",
-          phone: "+351 21 444 5678",
-          rating: 4.3,
-          reviews: 78,
-          photos: [],
-          location: { lat: 38.7350, lng: -9.1459 } // Exact coordinates for Av. da República 45
-        },
-        {
-          id: "5",
-          name: "Metro Business Center",
-          address: "Rua do Ouro 12, Lisboa",
-          phone: "+351 21 333 9876",
-          rating: 4.6,
-          reviews: 112,
-          photos: [],
-          location: { lat: 38.7103, lng: -9.1374 } // Exact coordinates for Rua do Ouro 12
-        },
-        {
-          id: "6",
-          name: "Capital Professional Services",
-          address: "Av. António Augusto de Aguiar 90, Lisboa",
-          phone: "+351 21 222 3456",
-          rating: 4.4,
-          reviews: 95,
-          photos: [],
-          location: { lat: 38.7331, lng: -9.1520 } // Exact coordinates for Av. António Augusto de Aguiar 90
-        }
-      ];
+      // Default results array with exact coordinates for general businesses
+      function generateDefaultResults() {
+        const businesses = [
+          // Baixa-Chiado District
+          {
+            name: "Professional Solutions Lda",
+            address: "Av. da Liberdade 110, Lisboa",
+            location: { lat: 38.7189, lng: -9.1428 }
+          },
+          {
+            name: "Business Services Portugal",
+            address: "Rua Augusta 25, Lisboa",
+            location: { lat: 38.7099, lng: -9.1397 }
+          },
+          {
+            name: "Lisbon Consulting Group",
+            address: "Praça do Comércio, Lisboa",
+            location: { lat: 38.7075, lng: -9.1364 }
+          },
+          // Avenidas Novas District
+          {
+            name: "Expert Services Network",
+            address: "Av. da República 45, Lisboa",
+            location: { lat: 38.7350, lng: -9.1459 }
+          },
+          {
+            name: "Metro Business Center",
+            address: "Rua do Ouro 12, Lisboa",
+            location: { lat: 38.7103, lng: -9.1374 }
+          },
+          {
+            name: "Capital Professional Services",
+            address: "Av. António Augusto de Aguiar 90, Lisboa",
+            location: { lat: 38.7331, lng: -9.1520 }
+          },
+          // Parque das Nações District
+          {
+            name: "Innovation Hub Lisboa",
+            address: "Alameda dos Oceanos 123, Lisboa",
+            location: { lat: 38.7687, lng: -9.0974 }
+          },
+          {
+            name: "Tech Valley Services",
+            address: "Passeio do Levante 25, Lisboa",
+            location: { lat: 38.7631, lng: -9.0952 }
+          },
+          // Belém District
+          {
+            name: "Belém Business Center",
+            address: "Rua de Belém 45, Lisboa",
+            location: { lat: 38.6970, lng: -9.2069 }
+          },
+          {
+            name: "Riverside Consulting",
+            address: "Av. Brasília 15, Lisboa",
+            location: { lat: 38.6965, lng: -9.1800 }
+          },
+          // Alfama District
+          {
+            name: "Historic Quarter Services",
+            address: "Rua dos Remédios 78, Lisboa",
+            location: { lat: 38.7121, lng: -9.1307 }
+          },
+          {
+            name: "Alfama Business Solutions",
+            address: "Rua de São Miguel 34, Lisboa",
+            location: { lat: 38.7133, lng: -9.1317 }
+          },
+          // Campo de Ourique District
+          {
+            name: "Campo Professional Center",
+            address: "Rua Ferreira Borges 89, Lisboa",
+            location: { lat: 38.7183, lng: -9.1670 }
+          },
+          {
+            name: "Business Innovation Lab",
+            address: "Rua Saraiva de Carvalho 45, Lisboa",
+            location: { lat: 38.7167, lng: -9.1689 }
+          },
+          // Príncipe Real District
+          {
+            name: "Creative Business Hub",
+            address: "Rua da Escola Politécnica 56, Lisboa",
+            location: { lat: 38.7178, lng: -9.1477 }
+          },
+          {
+            name: "Design District Services",
+            address: "Rua Dom Pedro V 89, Lisboa",
+            location: { lat: 38.7164, lng: -9.1466 }
+          },
+          // Cais do Sodré District
+          {
+            name: "Waterfront Business Center",
+            address: "Rua do Alecrim 45, Lisboa",
+            location: { lat: 38.7070, lng: -9.1436 }
+          },
+          {
+            name: "Pink Street Services",
+            address: "Rua Nova do Carvalho 23, Lisboa",
+            location: { lat: 38.7067, lng: -9.1445 }
+          },
+          // Alvalade District
+          {
+            name: "Alvalade Business Park",
+            address: "Av. da Igreja 67, Lisboa",
+            location: { lat: 38.7520, lng: -9.1450 }
+          },
+          {
+            name: "Roma Business Center",
+            address: "Av. de Roma 123, Lisboa",
+            location: { lat: 38.7420, lng: -9.1340 }
+          }
+        ];
+
+        // Add common fields and generate unique IDs
+        return businesses.map((business, index) => ({
+          id: (index + 1).toString(),
+          ...business,
+          phone: `+351 21 ${Math.floor(100 + Math.random() * 900)} ${Math.floor(1000 + Math.random() * 9000)}`,
+          rating: (3.5 + Math.random() * 1.5).toFixed(1),
+          reviews: Math.floor(50 + Math.random() * 150),
+          photos: []
+        }));
+      }
+
+      const defaultResults = generateDefaultResults();
 
       // Get results based on profession or default
       let results = professionBusinesses[query.toLowerCase()] || defaultResults;
