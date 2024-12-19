@@ -66,13 +66,13 @@ export function MapView({ businesses, selectedBusiness, onMarkerClick }: MapView
           animation: google.maps.Animation.DROP,
           icon: {
             url: `data:image/svg+xml,${encodeURIComponent(`
-              <svg width="24" height="36" viewBox="0 0 24 36" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 0C5.383 0 0 5.383 0 12c0 9 12 24 12 24s12-15 12-24c0-6.617-5.383-12-12-12z" fill="#DB4437"/>
-                <circle cx="12" cy="12" r="7" fill="white"/>
+              <svg width="32" height="48" viewBox="0 0 32 48" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 0C7.164 0 0 7.164 0 16c0 12 16 32 16 32s16-20 16-32c0-8.836-7.164-16-16-16z" fill="#FF4444"/>
+                <circle cx="16" cy="16" r="8" fill="white"/>
               </svg>
             `)}`,
-            anchor: new google.maps.Point(12, 36),
-            scaledSize: new google.maps.Size(24, 36)
+            anchor: new google.maps.Point(16, 48),
+            scaledSize: new google.maps.Size(32, 48)
           }
         });
 

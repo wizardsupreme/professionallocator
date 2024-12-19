@@ -16,7 +16,7 @@ export default function HomePage() {
   const { data: businesses, isLoading } = useSearch(searchParams);
   const { user, logout } = useUser();
 
-  const ITEMS_PER_PAGE = 9;
+  const ITEMS_PER_PAGE = 15;
   const totalPages = Math.ceil((businesses?.length || 0) / ITEMS_PER_PAGE);
 
   const paginatedBusinesses = useMemo(() => {
@@ -104,7 +104,7 @@ export default function HomePage() {
               </div>
             ) : view === 'list' ? (
               <div className="space-y-6">
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-2">
                   {paginatedBusinesses.map((business) => (
                     <BusinessCard
                       key={business.id}
