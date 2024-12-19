@@ -21,13 +21,15 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
 
   useEffect(() => {
     if (business?.reviewsList) {
+      // Reset current page when business changes
+      setCurrentPage(1);
       // Add a small delay to ensure smooth animation
       const timer = setTimeout(() => {
         setIsLoading(false);
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [business?.reviewsList]);
+  }, [business?.id]); // Using business.id to detect changes
 
   if (!business) return null;
 
@@ -113,11 +115,15 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
                   <div className="flex justify-center py-8">
                     <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                   </div>
+                ) : !business.reviewsList?.length ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    No reviews available
+                  </div>
                 ) : (
                   <>
                     <div className="divide-y">
                       {currentReviews.map((review, index) => (
-                        <div key={index} className="py-4">
+                        <div key={`${review.author_name}-${index}`} className="py-4">
                           <div className="flex items-center gap-2 mb-2">
                             <div className="flex">
                               {Array.from({ length: 5 }).map((_, i) => (
@@ -140,15 +146,13 @@ export function BusinessDetails({ business, onClose }: BusinessDetailsProps) {
                         </div>
                       ))}
                     </div>
-                    {totalPages > 1 && (
-                      <div className="flex justify-center pt-4">
-                        <Pagination
-                          currentPage={currentPage}
-                          totalPages={totalPages}
-                          onPageChange={setCurrentPage}
-                        />
-                      </div>
-                    )}
+                    <div className="flex justify-center pt-4">
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                      />
+                    </div>
                   </>
                 )}
               </div>
