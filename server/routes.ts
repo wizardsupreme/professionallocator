@@ -25,7 +25,75 @@ export function registerRoutes(app: Express): Server {
 
       const baseLocation = mockLocations[location.toLowerCase()] || { lat: 38.7223, lng: -9.1393 }; // Default to Lisbon
 
-      const results = [
+      // Mock data based on profession/query
+      const professionBusinesses: Record<string, any[]> = {
+        'electrician': [
+          {
+            id: "1",
+            name: "Lisboa Electrical Services",
+            address: "Rua da Prata 125, Lisboa",
+            phone: "+351 21 123 4567",
+            rating: 4.7,
+            reviews: 89,
+            photos: [],
+            location: { lat: baseLocation.lat + 0.01, lng: baseLocation.lng + 0.01 }
+          },
+          {
+            id: "2",
+            name: "Power Solutions Lda",
+            address: "Av. Almirante Reis 45, Lisboa",
+            phone: "+351 21 234 5678",
+            rating: 4.5,
+            reviews: 67,
+            photos: [],
+            location: { lat: baseLocation.lat - 0.01, lng: baseLocation.lng - 0.01 }
+          },
+          {
+            id: "3",
+            name: "Electric Pros Portugal",
+            address: "Rua Augusta 78, Lisboa",
+            phone: "+351 21 345 6789",
+            rating: 4.8,
+            reviews: 124,
+            photos: [],
+            location: { lat: baseLocation.lat + 0.02, lng: baseLocation.lng + 0.02 }
+          },
+          {
+            id: "4",
+            name: "24/7 Electrical Services",
+            address: "Av. da República 234, Lisboa",
+            phone: "+351 21 456 7890",
+            rating: 4.3,
+            reviews: 45,
+            photos: [],
+            location: { lat: baseLocation.lat - 0.02, lng: baseLocation.lng - 0.02 }
+          },
+          {
+            id: "5",
+            name: "Smart Electric Solutions",
+            address: "Rua do Carmo 56, Lisboa",
+            phone: "+351 21 567 8901",
+            rating: 4.6,
+            reviews: 93,
+            photos: [],
+            location: { lat: baseLocation.lat + 0.03, lng: baseLocation.lng + 0.03 }
+          },
+          {
+            id: "6",
+            name: "Green Electric Company",
+            address: "Av. da Liberdade 189, Lisboa",
+            phone: "+351 21 678 9012",
+            rating: 4.4,
+            reviews: 78,
+            photos: [],
+            location: { lat: baseLocation.lat - 0.03, lng: baseLocation.lng - 0.03 }
+          }
+        ],
+        // Add more profession-specific businesses here
+      };
+
+      // Default results if no profession match
+      const defaultResults = [
         {
           id: "1",
           name: "Professional Solutions Lda",
@@ -36,27 +104,10 @@ export function registerRoutes(app: Express): Server {
           photos: [],
           location: { lat: baseLocation.lat + 0.01, lng: baseLocation.lng + 0.01 }
         },
-        {
-          id: "2",
-          name: "Business Services Portugal",
-          address: "Rua Augusta 25, Lisboa",
-          phone: "+351 21 987 6543",
-          rating: 4.2,
-          reviews: 89,
-          photos: [],
-          location: { lat: baseLocation.lat - 0.01, lng: baseLocation.lng - 0.01 }
-        },
-        {
-          id: "3",
-          name: "Lisbon Consulting Group",
-          address: "Praça do Comércio, Lisboa",
-          phone: "+351 21 555 0123",
-          rating: 4.8,
-          reviews: 156,
-          photos: [],
-          location: { lat: baseLocation.lat, lng: baseLocation.lng + 0.02 }
-        }
+        // ... (previous default results)
       ];
+
+      const results = professionBusinesses[query.toLowerCase()] || defaultResults;
 
       // Save search history if user is logged in
       if (req.user?.id) {

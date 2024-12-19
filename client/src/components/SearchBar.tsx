@@ -14,10 +14,29 @@ interface PlacePrediction {
   place_id: string;
 }
 
+interface Profession {
+  name: string;
+  category: string;
+}
+
+const PROFESSIONS: Profession[] = [
+  { name: "Electrician", category: "Construction & Maintenance" },
+  { name: "Plumber", category: "Construction & Maintenance" },
+  { name: "Carpenter", category: "Construction & Maintenance" },
+  { name: "Lawyer", category: "Legal Services" },
+  { name: "Accountant", category: "Financial Services" },
+  { name: "Doctor", category: "Healthcare" },
+  { name: "Dentist", category: "Healthcare" },
+  { name: "Mechanic", category: "Automotive" },
+  { name: "Web Developer", category: "Technology" },
+  { name: "Graphic Designer", category: "Creative Services" }
+];
+
 export function SearchBar({ onSearch }: SearchBarProps) {
   const [query, setQuery] = useState('');
   const [location, setLocation] = useState('');
   const [predictions, setPredictions] = useState<PlacePrediction[]>([]);
+  const [professionSuggestions, setProfessionSuggestions] = useState<Profession[]>([]);
   const [loading, setLoading] = useState(false);
   const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
   const [showPredictions, setShowPredictions] = useState(false);
